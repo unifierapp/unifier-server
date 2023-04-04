@@ -114,13 +114,14 @@ export default class Strategy extends passport.Strategy {
         this._servers.delete(shortDomain)
     }
 
-    async authenticate(req: express.Request, options: { domain?: string }): Promise<void> {
+    async authenticate(req: express.Request): Promise<void> {
+        const domain = req.query.domain;
+        if (!domain) {
+            return this.fail(new Error("No domain specified."));
+        }
+        const server = this.getServer(domain as string);
         // Process without code
         if (!req.query.code) {
-            if (!options.domain) {
-                return this.fail(new Error("No domain specified."));
-            }
-            const server = this.getServer(options.domain);
             const url = new URL("/oauth/authorize", server.url);
             const searchParams = url.searchParams;
             searchParams.set("response_type", "code");
@@ -129,10 +130,6 @@ export default class Strategy extends passport.Strategy {
             searchParams.set("scope", this._scopes.join(" "));
             this.redirect(url.toString(), 200);
         } else {
-            if (!req.query.domain) {
-                return this.fail(new Error("No domain specified."));
-            }
-            const server = this.getServer(req.query.domain as string);
             const tokenInfo = (await axios.post<TokenResponse>("/oauth/token", {
                 grant_type: "authorization_code",
                 code: req.query.code,
