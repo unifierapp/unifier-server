@@ -29,4 +29,13 @@ router.get('/twitter/callback', passport.authenticate('twitter', {
     failureFlash: false
 }))
 
+router.get('/mastodon', passport.authenticate('mastodon', {
+    scope: ['profile', 'email']
+}))
+router.get('/twitter/callback', passport.authenticate('twitter', {
+    failureRedirect: getFrontendUrl("/settings"),
+    successRedirect: getFrontendUrl("/settings"),
+    failureFlash: false
+}))
+
 export default router

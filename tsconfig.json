@@ -18,6 +18,12 @@
     ],
     "exclude": [
       "node_modules"
+    ],
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.collection"
     ]
   },
   "exclude": [
