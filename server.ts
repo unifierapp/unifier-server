@@ -3,7 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import * as config from "./config";
 import activatePassport from "@/domains/auth/passport";
-import authRouter from "@/routes/auth"
+import authRouter from "@/domains/auth/routes"
 
 const app = express()
 app.use(cors())
@@ -17,5 +17,7 @@ mongoose.connect(config.MONGODB_URI, {
 }).then(() => {
     console.log("Successfully connected to MongoDB.")
 })
+
+app.use("/auth", authRouter)
 
 export default app

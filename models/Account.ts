@@ -15,7 +15,7 @@ export interface IAccount {
 
 const AccountSchema = new mongoose.Schema<IAccount>({
     user: {
-        types: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User"
     },

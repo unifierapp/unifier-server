@@ -1,10 +1,13 @@
 import dotenv from "dotenv"
-import Session, {SessionOptions} from "express-session"
+import {SessionOptions} from "express-session"
 import MongoStore from "connect-mongo";
+import process from "process";
 
 dotenv.config({
     path: "./.env"
 })
+
+export const PORT = process.env.PORT ?? 8000
 
 export const DB_NAME = "converge"
 
