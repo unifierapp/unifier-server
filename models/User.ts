@@ -4,10 +4,7 @@ import {Document, PassportLocalSchema, PassportLocalDocument, PassportLocalModel
 
 export interface IUser extends PassportLocalDocument {
     email: string,
-    name: {
-        first: string,
-        last: string,
-    },
+    displayName: string,
     profilePictureUrl: string,
     profilePictureCloudId: string,
 }
@@ -20,17 +17,8 @@ const UserSchema: PassportLocalSchema<IUser, UserModel<IUser>> = new mongoose.Sc
         type: String,
         required: true,
     },
-    name: {
-        type: {
-            first: {
-                type: String,
-                required: true
-            },
-            last: {
-                type: String,
-                required: true
-            }
-        },
+    displayName: {
+        type: String,
         required: true
     },
     profilePictureUrl: {

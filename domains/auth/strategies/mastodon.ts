@@ -193,14 +193,14 @@ export const mastodonStrategy = new Strategy({
     }
     await Account.findOneAndUpdate({
         provider: "mastodon",
-        providerDomain: domain,
+        domain: domain,
         user: req.user._id,
     }, {
         $set: {
             user: req.user._id,
             providerAccountId: profile.id,
             provider: "mastodon",
-            providerDomain: domain,
+            domain: domain,
             accessToken: accessToken,
             displayName: profile.display_name,
             userName: profile.username,

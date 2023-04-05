@@ -15,17 +15,14 @@ const googleStrategy = new GoogleStrategy({
         return done(new Error("Google profile has no emails!"));
     }
     // Sign in flow. We allow users to sign up and link directly via email, but the new account needs to be verified.
-    let user: HydratedDocument<IUser>|null = await User.findOne({
+    let user: HydratedDocument<IUser> | null = await User.findOne({
         email: profile.emails[0].value,
     });
     if (!user) {
         user = await User.create({
             email: profile.emails[0].value,
-            profileImageUrl: profile.photos?.[0].value,
-            name: {
-                first: profile.name?.givenName,
-                last: profile.name?.familyName
-            }
+            profilePictureUrl: profile.photos?.[0].value,
+            displayName: profile.displayName,
         })
     }
     done(null, user);

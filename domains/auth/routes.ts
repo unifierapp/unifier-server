@@ -3,7 +3,8 @@ import passport from "passport";
 import * as process from "process";
 import logout from "@/domains/auth/controllers/logout";
 import mastodonLogin from "@/domains/auth/controllers/mastodon";
-import {mastodonStrategy} from "@/domains/auth/strategies/mastodon";
+import {errorHandling} from "@/utils/middlewares";
+import {HTTPError} from "@/utils/errors";
 
 const router = express.Router()
 

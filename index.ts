@@ -1,7 +1,13 @@
 import app from "@/server";
-import * as process from "process";
 import * as config from "@/config"
+import {errorHandling} from "@/utils/middlewares";
 
-app.listen(config.PORT, () => {
-    console.log(`Listening to port ${process.env.PORT}`)
-});
+
+
+async function run() {
+    app.listen(config.PORT, () => {
+        console.log(`Listening to port ${process.env.PORT}`)
+    });
+}
+
+run();
