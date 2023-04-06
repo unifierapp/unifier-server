@@ -40,7 +40,6 @@ export default async function searchMastodonAccount(info: {
         },
         baseURL: endpoint,
     });
-    console.log(result.headers)
     return result.data.map((acc): SearchedAccount => {
         return {
             providerId: acc.id,
