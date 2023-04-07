@@ -1,6 +1,6 @@
 import {urlOrDomainToUrl, urlOrDomainToDomain} from "@/utils/urlHelpers";
 import axios from "axios";
-import getAccessToken from "@/domains/auth/services/getAccessToken";
+import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError} from "@/utils/errors";
 import {SearchedAccount} from "./index";
 
@@ -20,7 +20,7 @@ interface MastodonAccount {
     statuses_count: number;
 }
 
-export default async function searchMastodonAccount(info: {
+export default async function searchMastodonAccount(user: Express.User, info: {
     username: string,
     domain?: string,
 }): Promise<SearchedAccount[]> {
@@ -29,7 +29,10 @@ export default async function searchMastodonAccount(info: {
     }
     const endpoint = urlOrDomainToUrl(info.domain);
     const domain = urlOrDomainToDomain(info.domain);
-    const accessToken = await getAccessToken("mastodon", info.domain);
+    const accessToken = await getAccount(user, {
+        provider: "mastodon",
+        domain: info.domain
+    });
     const result = await axios.get<MastodonAccount[]>("/api/v1/accounts/search", {
         params: {
             q: info.username,

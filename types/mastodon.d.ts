@@ -42,3 +42,27 @@ export interface Account {
     emojis: ProfileEmoji[];
     fields: ProfileField[];
 }
+
+export interface MediaAttachment {
+    id: string;
+    type: string;
+    url: string;
+    preview_url: string;
+    text_url: string;
+}
+
+export interface Post {
+    id: string;
+    created_at: Date;
+    replies_count: number;
+    reblogs_count: number;
+    favourites_count: number;
+    favourited: boolean;
+    reblogged: boolean;
+    muted: boolean;
+    bookmarked: false;
+    content: string;
+    account: Account;
+    media_attachments: MediaAttachment[];
+    url: string;
+}

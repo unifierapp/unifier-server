@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IConnectionAccount {
+    user: mongoose.Types.ObjectId,
     connection: mongoose.Types.ObjectId,
     provider: string,
     domain?: string,
@@ -26,6 +27,5 @@ const ConnectionAccountSchema = new mongoose.Schema<IConnectionAccount>({
     }
 });
 
-const ConnectionAccount = mongoose.model("ConnectionAccount", ConnectionAccountSchema);
-
+const ConnectionAccount = mongoose.model<IConnectionAccount>("ConnectionAccount", ConnectionAccountSchema);
 export default ConnectionAccount;

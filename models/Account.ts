@@ -11,6 +11,7 @@ export interface IAccount {
     refreshToken?: string,
     displayName: string,
     userName: string,
+    internalListId?: string,
 }
 
 const AccountSchema = new mongoose.Schema<IAccount>({
@@ -47,6 +48,9 @@ const AccountSchema = new mongoose.Schema<IAccount>({
     userName: {
         type: String,
         required: true
+    },
+    internalListId: {
+        type: String,
     }
 })
 
