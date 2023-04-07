@@ -46,6 +46,15 @@ export class UnauthorizedError extends HTTPError {
     }
 }
 
+export class AlreadyExistsError extends HTTPError {
+    httpCode = 401
+    code = 'ERROR_UNAUTHORIZED'
+
+    constructor(message = 'This resource already exists.') {
+        super(message)
+    }
+}
+
 export class UserMismatchError extends HTTPError {
     httpCode = 403
     code = 'ERROR_USER_MISMATCH'

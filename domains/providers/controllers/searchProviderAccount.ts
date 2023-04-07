@@ -12,7 +12,7 @@ export default async function searchProviderAccount(req: express.Request, res: e
     if (username && typeof username !== 'string') {
         throw new BadArgumentError("Invalid username format.");
     }
-    res.json(await searchProviderAccountFunction(provider, {
+    res.json(await searchProviderAccountFunction(req.user!, provider, {
         domain, username,
     }))
 }

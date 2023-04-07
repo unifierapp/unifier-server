@@ -1,9 +1,9 @@
 import {Express} from "express";
 import getAccount from "@/domains/auth/services/getAccount";
-import createMastodonList from "@/domains/providers/services/createProviderAccountList/mastodon";
+import createMastodonList from "@/domains/providers/services/getOrCreateProviderList/mastodon";
 import {NotFoundError} from "@/utils/errors";
 
-export default async function getOrCreateProviderAccountList(user: Express.User, props: {
+export default async function getOrCreateProviderList(user: Express.User, props: {
     provider: string,
     domain?: string,
 }): Promise<string> {

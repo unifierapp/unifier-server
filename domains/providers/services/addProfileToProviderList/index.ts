@@ -1,9 +1,9 @@
 import express from "express";
 import {AxiosError} from "axios";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
-import addProfileToMastodonList from "@/domains/providers/services/addProfileToProviderAccountList/mastodon";
+import addProfileToMastodonList from "@/domains/providers/services/addProfileToProviderList/mastodon";
 
-export default async function addProfileToProviderAccountList(user: Express.User, config: {
+export default async function addProfileToProviderList(user: Express.User, config: {
     provider: string,
     domain?: string,
 }, accountIds: string[]) {
