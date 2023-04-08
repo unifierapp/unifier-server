@@ -8,9 +8,9 @@ export interface ProviderAccountQuery {
     domain?: string;
 }
 
-export default async function resolveProviderAccounts(user: Express.User, queries: ProviderAccountQuery[]) {
+export default async function resolveProviderAccounts(user: Express.User, query: ProviderAccountQuery) {
     return ConnectionAccount.find({
         user: user._id,
-        $or: queries,
+        ...query,
     }).populate<{ connection: HydratedDocument<IConnection> }>("connection");
 }

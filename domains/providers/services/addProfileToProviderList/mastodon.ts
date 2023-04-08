@@ -1,7 +1,7 @@
 import {urlOrDomainToDomain, urlOrDomainToUrl} from "@/utils/urlHelpers";
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import getAccount from "@/domains/auth/services/getAccount";
-import {NotFoundError, UnauthorizedError} from "@/utils/errors";
+import {NotFoundError} from "@/utils/errors";
 
 export default async function addProfileToMastodonList(user: Express.User, params: { domain?: string, accountIds: string[] }) {
     if (!params.domain) {
