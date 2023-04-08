@@ -1,6 +1,7 @@
 import FederatedClient from "@/models/FederatedClient";
 import {mastodonStrategy} from "@/domains/auth/strategies/mastodon";
 import axios from "axios";
+import {urlOrDomainToDomain} from "@/utils/urlHelpers";
 
 function getUrlFromDomain(urlOrDomain: string) {
     try {
@@ -26,6 +27,7 @@ export default async function activateMastodonClient(domain: string, redirectUrl
         return;
     } catch (e) {
     }
+    domain = urlOrDomainToDomain(domain);
     let lookup = await FederatedClient.findOne({
         domain: domain,
         redirect_url: redirectUrl

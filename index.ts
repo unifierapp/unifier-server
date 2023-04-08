@@ -1,8 +1,6 @@
 import app from "@/server";
 import * as config from "@/config"
-import {errorHandling} from "@/utils/middlewares";
-
-
+import "@/utils/axiosDev"
 
 async function run() {
     app.listen(config.PORT, () => {

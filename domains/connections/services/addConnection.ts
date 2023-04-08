@@ -1,5 +1,14 @@
 import Connection, {IConnection} from "@/models/Connection";
 
-export default async function addConnection(data: Partial<IConnection>) {
-    return await Connection.create({...data});
+interface AddConnectionParameters extends Omit<IConnection, "profileImageUrl" | "profileImageCloudId"> {
+    image?: Express.Multer.File,
+}
+
+export default async function addConnection(data: AddConnectionParameters) {
+    return await Connection.create({
+        user: data.user,
+        birthday: data.birthday,
+        description: data.description,
+        displayName: data.displayName,
+    });
 }
