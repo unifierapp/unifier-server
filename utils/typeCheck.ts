@@ -54,11 +54,3 @@ export function forceOptionalDate(arg: any): Date | undefined {
     }
     return arg;
 }
-
-export function forceOptionalFile(arg: any): Express.Multer.File | undefined {
-    if (typeof arg !== 'undefined' && !(arg instanceof multer)) {
-        throw new BadArgumentError("This argument must be a string.");
-    }
-    return arg;
-}
-
