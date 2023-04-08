@@ -1,4 +1,3 @@
-import {Express} from "express";
 import getAccount from "@/domains/auth/services/getAccount";
 import createMastodonList from "@/domains/providers/services/getOrCreateProviderList/mastodon";
 import {NotFoundError} from "@/utils/errors";

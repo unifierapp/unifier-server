@@ -7,14 +7,14 @@ export default async function addProfileToProviderList(user: Express.User, confi
     provider: string,
     domain?: string,
 }, accountIds: string[]) {
+    const mappings: Record<string, (user: Express.User, params: { domain?: string, accountIds: string[] }) => void> = {
+        mastodon: addProfileToMastodonList,
+    }
+    const func = mappings[config.provider];
+    if (!func) {
+        throw new NotFoundError("There is no service.");
+    }
     try {
-        const mappings: Record<string, (user: Express.User, params: { domain?: string, accountIds: string[] }) => void> = {
-            mastodon: addProfileToMastodonList,
-        }
-        const func = mappings[config.provider];
-        if (!func) {
-            throw new NotFoundError("There is no service.");
-        }
         await func(user, {
             domain: config.domain, accountIds,
         });

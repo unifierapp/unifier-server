@@ -1,16 +1,10 @@
 import express from "express";
 import getOrCreateProviderAccountListFunc from "@/domains/providers/services/getOrCreateProviderList";
-import {BadArgumentError} from "@/utils/errors";
+import {forceOptionalNonEmptyString, forceNonEmptyString} from "@/utils/typeCheck";
 
 export default async function getOrCreateProviderList(req: express.Request, res: express.Response) {
-    let provider = req.query.provider;
-    let domain = req.query.domain;
-    if (typeof provider !== 'string') {
-        throw new BadArgumentError("Missing provider string.");
-    }
-    if (domain && typeof domain !== 'string') {
-        throw new BadArgumentError("Invalid domain argument.");
-    }
+    let provider = forceNonEmptyString(req.query.provider);
+    let domain = forceOptionalNonEmptyString(req.query.domain);
     const listId = await getOrCreateProviderAccountListFunc(req.user!, {
         provider,
         domain,

@@ -1,17 +1,11 @@
 import express from "express";
 import searchProviderAccountFunction from "../services/searchProviderAccount";
-import {BadArgumentError, NotFoundError} from "@/utils/errors";
+import {forceString, forceNonEmptyString, forceOptionalNonEmptyString} from "@/utils/typeCheck";
 
 export default async function searchProviderAccount(req: express.Request, res: express.Response) {
-    const provider: unknown = req.query.provider;
-    if (typeof provider !== "string") {
-        throw new NotFoundError("You must specify a provider.");
-    }
-    const domain: string | undefined = req.query.domain as string | undefined;
-    const username = req.query.username ?? "";
-    if (username && typeof username !== 'string') {
-        throw new BadArgumentError("Invalid username format.");
-    }
+    const provider = forceNonEmptyString(req.query.provider);
+    const domain = forceOptionalNonEmptyString(req.query.domain);
+    const username = forceString(req.query.username);
     res.json(await searchProviderAccountFunction(req.user!, provider, {
         domain, username,
     }))
