@@ -2,6 +2,7 @@ import passport from "passport";
 import axios from "axios";
 import express from "express";
 import Account from "@/models/Account";
+import getOrCreateProviderList from "@/domains/providers/services/getOrCreateProviderList";
 
 export interface ProfileField {
     name: string;
@@ -207,6 +208,10 @@ export const mastodonStrategy = new Strategy({
         }
     }, {
         upsert: true,
+    });
+    await getOrCreateProviderList(req.user, {
+        provider: "mastodon",
+        domain: domain,
     });
     callback(null, req.user);
 });

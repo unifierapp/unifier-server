@@ -12,7 +12,7 @@ export interface IUser extends PassportLocalDocument {
 interface UserModel<T extends Document> extends PassportLocalModel<T> {
 }
 
-const UserSchema: PassportLocalSchema<IUser, UserModel<IUser>> = new mongoose.Schema({
+const UserSchema = new mongoose.Schema<IUser>({
     email: {
         type: String,
         required: true,
@@ -32,10 +32,11 @@ const UserSchema: PassportLocalSchema<IUser, UserModel<IUser>> = new mongoose.Sc
 })
 
 UserSchema.plugin(passportLocalMongoose, {
-    usernameField: "email"
-})
+    usernameField: 'email',
+    passwordFiled: 'password',
+});
 
-const User = mongoose.model<IUser>("User", UserSchema)
+const User: UserModel<IUser> = mongoose.model<IUser>("User", UserSchema)
 
 
-export default User
+export default User;

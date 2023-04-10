@@ -4,7 +4,6 @@ export default function logout(req: Request, res: Response) {
     req.logout(() => {
         req.session.destroy(() => {
             res.json({
-                success: true
             })
         });
     });

@@ -7,6 +7,7 @@ import activatePassport from "@/domains/auth/passport";
 import authRouter from "@/domains/auth/routes";
 import providerRouter from "@/domains/providers/routes";
 import connectionRouter from "@/domains/connections/routes";
+import postRouter from "@/domains/posts/routes";
 import {errorHandling} from "@/utils/middlewares";
 import {HTTPError} from "@/utils/errors";
 
@@ -27,6 +28,7 @@ mongoose.connect(config.MONGODB_URI, {
 app.use("/auth", authRouter)
 app.use("/provider", providerRouter)
 app.use("/connection", connectionRouter)
+app.use("/post", postRouter)
 
 app.use(errorHandling)
 

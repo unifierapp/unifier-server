@@ -3,6 +3,7 @@ import User from "@/models/User";
 import session from "express-session";
 import * as config from "@/config";
 import {mastodonStrategy} from "./strategies/mastodon";
+import {Strategy as LocalStrategy} from "passport-local";
 import passport from "passport";
 import express from "express";
 
@@ -12,7 +13,7 @@ function activatePassport(app: express.Express) {
     app.use(passport.session());
     passport.use(googleStrategy);
     passport.use(mastodonStrategy);
-    passport.use(User.createStrategy());
+    passport.use(new LocalStrategy(User.authenticate()));
     passport.serializeUser((user, done) => {
         done(null, user.id);
     });

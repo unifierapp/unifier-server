@@ -1,13 +1,14 @@
 import Connection, {IConnection} from "@/models/Connection";
 import uploader from "@/domains/upload/cloudinary"
+import express from "express";
 
-interface AddConnectionParameters extends Omit<IConnection, "profileImageUrl" | "profileImageCloudId"> {
+interface AddConnectionParameters extends Omit<IConnection, "profileImageUrl" | "profileImageCloudId" | "user"> {
     image?: Express.Multer.File,
 }
 
-export default async function addConnection(data: AddConnectionParameters) {
+export default async function addConnection(user: Express.User, data: AddConnectionParameters) {
     const insertData: Partial<IConnection> = {
-        user: data.user,
+        user: user._id,
         birthday: data.birthday,
         description: data.description,
         displayName: data.displayName,

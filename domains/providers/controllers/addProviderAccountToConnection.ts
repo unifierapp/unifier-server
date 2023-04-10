@@ -4,16 +4,16 @@ import addProviderAccountToConnectionFunction from "@/domains/providers/services
 import {UnauthorizedError} from "@/utils/errors";
 import mongoose from "mongoose";
 import {urlOrDomainToDomain} from "@/utils/urlHelpers";
-import {forceOptionalNonEmptyString, forceNonEmptyString} from "@/utils/typeCheck";
+import z from "zod";
 
 export default async function addProviderAccountToConnection(req: express.Request, res: express.Response) {
     if (!req.user) {
         throw new UnauthorizedError();
     }
-    const providerAccountId = forceNonEmptyString(req.body.provider_id);
-    const connectionId = forceNonEmptyString(req.body.connection_id);
-    const provider = forceNonEmptyString(req.body.provider);
-    let domain = forceOptionalNonEmptyString(req.body.domain);
+    const providerAccountId = z.string().nonempty().parse(req.body.provider_id);
+    const connectionId = z.string().nonempty().parse(req.body.connection_id);
+    const provider = z.string().nonempty().parse(req.body.provider);
+    let domain = z.string().nonempty().optional().parse(req.body.domain);
     if (domain) {
         domain = urlOrDomainToDomain(domain);
     }
