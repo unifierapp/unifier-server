@@ -1,4 +1,18 @@
+# Environment variables
 .env
+
+# Dependency files
+bun.lockb
+yarn.lock
+package-lock.json
+
 node_modules
+
+# IDE directories
 .idea
+.vscode
+
 _database
+
+# MacOS files
+.DS_Store
