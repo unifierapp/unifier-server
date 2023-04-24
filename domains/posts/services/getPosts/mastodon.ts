@@ -4,6 +4,7 @@ import {Post} from "@/types/mastodon";
 import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
 import {z} from "zod";
+import {raw} from "express";
 
 export default async function getMastodonPosts(props: {
     endpoint?: string, user: Express.User,
@@ -16,11 +17,9 @@ export default async function getMastodonPosts(props: {
     if (!account) {
         throw new UnauthorizedError("You haven't signed in to this service yet.");
     }
-    if (!account.internalListId) {
-        throw new NotFoundError("You must create a list before being able to access the timeline.");
-    }
     try {
-        const rawData = await axios.get<Post[]>(`/api/v1/timelines/list/${account.internalListId}`, {
+        console.log(account.accessToken);
+        const rawData = await axios.get<Post[]>(`/api/v1/timelines/home`, {
             params: {
                 max_id: query.max_id,
                 since_id: query.since_id,
@@ -37,7 +36,12 @@ export default async function getMastodonPosts(props: {
                 endpoint: endpoint,
                 provider: "mastodon",
                 post_id: rawPost.id,
-                account_id: rawPost.account.id,
+                provider_account: {
+                    id: rawPost.account.id,
+                    username: rawPost.account.username,
+                    display_name: rawPost.account.display_name,
+                    profile_image_url: rawPost.account.avatar_static,
+                },
                 attachments: rawPost.media_attachments,
                 engagement_stats: {
                     likes: rawPost.favourites_count,

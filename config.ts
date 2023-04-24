@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 import {SessionOptions} from "express-session"
 import MongoStore from "connect-mongo";
 import process from "process";
+import {CorsOptions} from "cors";
 
 dotenv.config({
     path: "./.env"
@@ -28,4 +29,9 @@ export const SESSION_CONFIG: SessionOptions = {
         autoRemove: 'interval',
         autoRemoveInterval: 20,
     }),
+}
+
+export const CORS_CONFIG: CorsOptions = {
+    credentials: true,
+    origin: process.env.FRONTEND_URL,
 }

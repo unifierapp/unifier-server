@@ -32,7 +32,7 @@ const callback = async (req: Express.Request,
 const twitterStrategy = new Strategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "/api/auth/callback/twitter",
+    callbackURL: "/auth/twitter/callback",
     passReqToCallback: true,
 }, callback);
 

@@ -4,6 +4,7 @@ import express from "express";
 import Account from "@/models/Account";
 import getOrCreateProviderList from "@/domains/providers/services/getOrCreateProviderList";
 import {z} from "zod";
+import {getUrl} from "@/utils/urlHelpers";
 
 export interface ProfileField {
     name: string;
@@ -103,7 +104,7 @@ export default class Strategy extends passport.Strategy {
 
     async authenticate(req: express.Request): Promise<void> {
         try {
-            const endpoint = z.string().nonempty().parse(req.query.endpoint);
+            const endpoint = getUrl(req.query.endpoint);
             const client = this.getClient(endpoint);
 
             // Process without code

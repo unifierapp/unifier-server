@@ -1,37 +1,18 @@
-import {
-    Schema,
-    model,
-    PassportLocalSchema,
-    PassportLocalModel, PassportLocalDocument,
-} from 'mongoose';
-import passportLocalMongoose from 'passport-local-mongoose';
+import axios from "axios";
+import {Post} from "@/types/mastodon";
+import account from "@/models/Account";
 
-import * as passport from 'passport';
-import {Strategy} from "passport-local";
+async function main() {
 
-interface User extends PassportLocalDocument{
-    _id: string;
-    username: string;
-    hash: string;
-    salt: string;
-    attempts: number;
-    last: Date;
+    const rawData = await axios.get<Post[]>(`/api/v1/timelines/home`, {
+        params: {
+            limit: 10,
+        },
+        headers: {
+            Authorization: `Bearer S8GYaa5Ys4IRBRhOndSIvLI0VZXiDejNdQSyK63sY8I`
+        },
+        baseURL: "https://mastodon.online",
+    }).then(res => res.data);
 }
 
-interface UserModelType extends PassportLocalModel<User> {}
-
-const UserSchema = new Schema<User, UserModelType>({
-    username: String,
-    hash: String,
-    salt: String,
-    attempts: Number,
-    last: Date,
-}) as PassportLocalSchema<User, UserModelType>;
-
-UserSchema.plugin(passportLocalMongoose);
-
-let UserModel: UserModelType = model<User, UserModelType>('User', UserSchema);
-
-passport.use(new Strategy(UserModel.authenticate()));
-
-new UserModel().authenticate
+main();

@@ -10,13 +10,18 @@ export interface PaginationQuery {
 }
 
 export interface RawPost {
-    post_id: string,
-    provider: string,
-    endpoint: string,
-    url: string,
-    created_at: Date,
-    account_id: string,
-    content: string,
+    post_id: string;
+    provider: string;
+    endpoint: string;
+    provider_account: {
+        username: string;
+        id: string;
+        display_name: string;
+        profile_image_url: string;
+    };
+    url: string;
+    created_at: Date;
+    content: string;
     attachments: Attachment[],
     engagement_stats: {
         likes: number,

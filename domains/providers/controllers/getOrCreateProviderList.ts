@@ -1,10 +1,11 @@
 import express from "express";
 import getOrCreateProviderAccountListFunc from "@/domains/providers/services/getOrCreateProviderList";
 import z from "zod";
+import {getUrl} from "@/utils/urlHelpers";
 
 export default async function getOrCreateProviderList(req: express.Request, res: express.Response) {
     let provider = z.string().nonempty().parse(req.query.provider);
-    let endpoint = z.string().nonempty().optional().parse(req.query.endpoint);
+    let endpoint = getUrl(req.query.endpoint);
     const listId = await getOrCreateProviderAccountListFunc(req.user!, {
         provider,
         endpoint,

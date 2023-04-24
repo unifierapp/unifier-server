@@ -14,7 +14,7 @@ import {errorHandling} from "@/utils/middlewares";
 
 
 const app = express()
-app.use(cors())
+app.use(cors(config.CORS_CONFIG))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.enable('trust proxy')
