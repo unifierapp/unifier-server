@@ -5,9 +5,9 @@ import addProfileToMastodonList from "@/domains/providers/services/addProfileToP
 
 export default async function addProfileToProviderList(user: Express.User, config: {
     provider: string,
-    domain?: string,
+    endpoint?: string,
 }, accountIds: string[]) {
-    const mappings: Record<string, (user: Express.User, params: { domain?: string, accountIds: string[] }) => void> = {
+    const mappings: Record<string, (user: Express.User, params: { endpoint?: string, accountIds: string[] }) => void> = {
         mastodon: addProfileToMastodonList,
     }
     const func = mappings[config.provider];
@@ -16,7 +16,7 @@ export default async function addProfileToProviderList(user: Express.User, confi
     }
     try {
         await func(user, {
-            domain: config.domain, accountIds,
+            endpoint: config.endpoint, accountIds,
         });
     } catch (e) {
         if (e instanceof AxiosError) {

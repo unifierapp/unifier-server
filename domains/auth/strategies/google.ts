@@ -22,7 +22,7 @@ const googleStrategy = new GoogleStrategy({
         user = await User.create({
             email: profile.emails[0].value,
             profilePictureUrl: profile.photos?.[0].value,
-            displayName: profile.displayName,
+            username: profile.displayName,
         })
     }
     done(null, user);

@@ -1,12 +1,13 @@
 import * as mongoose from "mongoose";
 import passportLocalMongoose from "passport-local-mongoose"
-import {Document, PassportLocalSchema, PassportLocalDocument, PassportLocalModel} from "mongoose";
+import {Document, PassportLocalDocument, PassportLocalModel} from "mongoose";
 
 export interface IUser extends PassportLocalDocument {
     email: string,
-    displayName: string,
+    username: string,
     profilePictureUrl: string,
     profilePictureCloudId: string,
+    onboarded: boolean,
 }
 
 interface UserModel<T extends Document> extends PassportLocalModel<T> {
@@ -17,7 +18,7 @@ const UserSchema = new mongoose.Schema<IUser>({
         type: String,
         required: true,
     },
-    displayName: {
+    username: {
         type: String,
         required: true
     },
@@ -28,6 +29,11 @@ const UserSchema = new mongoose.Schema<IUser>({
     },
     profilePictureCloudId: {
         type: String,
+    },
+    onboarded: {
+        type: Boolean,
+        default: false,
+        required: true,
     }
 })
 

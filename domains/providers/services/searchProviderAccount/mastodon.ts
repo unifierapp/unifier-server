@@ -1,8 +1,8 @@
-import {urlOrDomainToUrl, urlOrDomainToDomain} from "@/utils/urlHelpers";
+import {urlOrDomainToDomain} from "@/utils/urlHelpers";
 import axios from "axios";
 import getAccount from "@/domains/auth/services/getAccount";
-import {NotFoundError} from "@/utils/errors";
 import {SearchedAccount} from "./index";
+import {z} from "zod";
 
 interface MastodonAccount {
     id: string;
@@ -22,16 +22,12 @@ interface MastodonAccount {
 
 export default async function searchMastodonAccount(user: Express.User, info: {
     username: string,
-    domain?: string,
+    endpoint?: string,
 }): Promise<SearchedAccount[]> {
-    if (!info.domain) {
-        throw new NotFoundError("Domain not specified.");
-    }
-    const endpoint = urlOrDomainToUrl(info.domain);
-    const domain = urlOrDomainToDomain(info.domain);
+    const endpoint = z.string().nonempty().parse(info.endpoint);
     const accessToken = await getAccount(user, {
         provider: "mastodon",
-        domain: info.domain
+        endpoint: endpoint,
     });
     const result = await axios.get<MastodonAccount[]>("/api/v1/accounts/search", {
         params: {
@@ -46,7 +42,7 @@ export default async function searchMastodonAccount(user: Express.User, info: {
     return result.data.map((acc): SearchedAccount => {
         return {
             providerId: acc.id,
-            providerHandle: `${acc.username}@${domain}`,
+            providerHandle: `${acc.username}@${urlOrDomainToDomain(endpoint)}`,
             providerDisplayName: acc.display_name,
             providerProfilePictureUrl: acc.avatar_static,
         }

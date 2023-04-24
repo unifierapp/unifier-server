@@ -4,10 +4,10 @@ import unlinkProviderFunc from "@/domains/providers/services/unlinkProvider";
 
 export default async function unlinkProvider(req: express.Request, res: express.Response) {
     const provider = z.string().nonempty().parse(req.body.provider);
-    const domain = z.string().nonempty().optional().parse(req.body.domain);
+    const endpoint = z.string().nonempty().optional().parse(req.body.endpoint);
 
     await unlinkProviderFunc(req.user!, {
-        provider, domain
+        provider, endpoint
     });
 
     res.json({});

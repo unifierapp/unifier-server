@@ -1,6 +1,5 @@
-import express from "express";
 import axios from "axios";
-import {urlOrDomainToUrl} from "@/utils/urlHelpers";
+import {z} from "zod";
 import {NotFoundError} from "@/utils/errors";
 
 export interface ListResponse {
@@ -9,9 +8,11 @@ export interface ListResponse {
     replies_policy: string,
 }
 
-export default async function createMastodonList(accessToken: string, domain?: string) {
-    if (!domain) {
-        throw new NotFoundError("You must specify a domain.")
+export default async function createMastodonList(accessToken: string, endpoint?: string) {
+    try {
+        endpoint = z.string().nonempty().parse(endpoint);
+    } catch (e) {
+        throw new NotFoundError("You must create a domain - it's somehow missing.");
     }
     const response = await axios.post<ListResponse>("/api/v1/lists", {
         title: "Converge API Connections"
@@ -19,7 +20,7 @@ export default async function createMastodonList(accessToken: string, domain?: s
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
-        baseURL: urlOrDomainToUrl(domain),
+        baseURL: endpoint,
     })
     return response.data.id;
 }

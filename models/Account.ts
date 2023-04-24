@@ -5,7 +5,7 @@ export interface IAccount {
     user: mongoose.Types.ObjectId,
     providerAccountId: string,
     provider: string,
-    domain?: string,
+    endpoint?: string,
     accessToken: string,
     accessTokenSecret?: string,
     refreshToken?: string,
@@ -28,7 +28,7 @@ const AccountSchema = new mongoose.Schema<IAccount>({
         type: String,
         required: true,
     },
-    domain: {
+    endpoint: {
         type: String,
     },
     accessToken: {

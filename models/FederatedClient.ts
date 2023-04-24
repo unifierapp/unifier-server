@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface IFederatedClient {
     provider: string;
-    domain: string;
+    endpoint: string;
     client_id: string;
     client_secret: string;
     redirect_url: string;
@@ -13,7 +13,7 @@ const FederatedClientSchema = new mongoose.Schema<IFederatedClient>({
         type: String,
         required: true
     },
-    domain: {
+    endpoint: {
         type: String,
         required: true,
     },

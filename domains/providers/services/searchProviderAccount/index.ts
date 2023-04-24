@@ -10,9 +10,9 @@ export interface SearchedAccount {
 
 export default async function searchProviderAccount(user: Express.User, provider: string, info: {
     username: string,
-    domain?: string,
+    endpoint?: string,
 }): Promise<SearchedAccount[]> {
-    const mapping: Record<string, (user: Express.User, props: { username: string, domain?: string }) => Promise<SearchedAccount[]>> = {
+    const mapping: Record<string, (user: Express.User, props: { username: string, endpoint?: string }) => Promise<SearchedAccount[]>> = {
         mastodon: searchMastodonAccount
     };
     const func = mapping[provider];

@@ -4,7 +4,7 @@ export interface IConnectionAccount {
     user: mongoose.Types.ObjectId,
     connection: mongoose.Types.ObjectId,
     provider: string,
-    domain?: string,
+    endpoint?: string,
     providerId: string,
 }
 
@@ -14,7 +14,7 @@ const ConnectionAccountSchema = new mongoose.Schema<IConnectionAccount>({
         required: true,
         ref: "Connection",
     },
-    domain: {
+    endpoint: {
         type: String,
     },
     providerId: {

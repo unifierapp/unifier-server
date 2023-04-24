@@ -6,7 +6,7 @@ import {NotFoundError} from "@/utils/errors";
 export interface ProviderAccountQuery {
     providerId: string,
     provider: string;
-    domain?: string;
+    endpoint?: string;
 }
 
 export default async function resolveProviderAccount(user: Express.User, query: ProviderAccountQuery) {

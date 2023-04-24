@@ -1,9 +1,8 @@
-import axios from "axios";
 import activateMastodonClient from "@/domains/auth/services/activateMastodonClient";
 import express from "express";
 import {resolveRedirectAuthUrl} from "@/domains/auth/utils/redirectUrl";
 import passport from "passport";
-import {NotFoundError} from "@/utils/errors";
+import {z} from "zod";
 
 const mastodonMiddleware = passport.authenticate("mastodon", {
     successRedirect: "/settings",
@@ -11,10 +10,7 @@ const mastodonMiddleware = passport.authenticate("mastodon", {
 });
 
 export default async function mastodonLogin(req: express.Request, res: express.Response) {
-    if (!req.query.domain) {
-        throw new NotFoundError("You have to specify a domain.")
-    }
-    const domain = req.query.domain as string;
-    await activateMastodonClient(domain, resolveRedirectAuthUrl(req, "/auth/mastodon/callback", domain));
+    const endpoint = z.string().nonempty().parse(req.query.endpoint);
+    await activateMastodonClient(endpoint, resolveRedirectAuthUrl(req, "/auth/mastodon/callback", endpoint));
     mastodonMiddleware(req, res);
 }

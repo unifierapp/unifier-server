@@ -12,7 +12,7 @@ export interface PaginationQuery {
 export interface RawPost {
     post_id: string,
     provider: string,
-    domain: string,
+    endpoint: string,
     url: string,
     created_at: Date,
     account_id: string,
@@ -33,12 +33,12 @@ interface Attachment {
 
 export interface ProviderConfig {
     provider: string,
-    domain?: string,
+    endpoint?: string,
 }
 
 export default async function getPosts(user: HydratedDocument<IUser>, config: ProviderConfig, query: PaginationQuery): Promise<RawPost[]> {
     const mappings: Record<string, (props: {
-        domain?: string, user: Express.User,
+        endpoint?: string, user: Express.User,
     }, query: PaginationQuery) => Promise<RawPost[]>> = {
         mastodon: getMastodonPosts
     }
@@ -46,6 +46,6 @@ export default async function getPosts(user: HydratedDocument<IUser>, config: Pr
     const func = mappings[config.provider];
 
     return await func({
-        domain: config.domain, user,
+        endpoint: config.endpoint, user,
     }, query);
 }

@@ -1,21 +1,17 @@
 import {PaginationQuery, RawPost} from "@/domains/posts/services/getPosts/index";
-import {urlOrDomainToDomain, urlOrDomainToUrl} from "@/utils/urlHelpers";
 import axios, {AxiosError} from "axios";
 import {Post} from "@/types/mastodon";
 import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
+import {z} from "zod";
 
 export default async function getMastodonPosts(props: {
-    domain?: string, user: Express.User,
+    endpoint?: string, user: Express.User,
 }, query: PaginationQuery): Promise<RawPost[]> {
-    if (!props.domain) {
-        throw new Error("You must specify a domain.");
-    }
-    const endpoint = urlOrDomainToUrl(props.domain);
-    const domain = urlOrDomainToDomain(props.domain);
+    const endpoint = z.string().nonempty().parse(props.endpoint);
     const account = await getAccount(props.user, {
         provider: "mastodon",
-        domain: domain,
+        endpoint: endpoint,
     });
     if (!account) {
         throw new UnauthorizedError("You haven't signed in to this service yet.");
@@ -38,7 +34,7 @@ export default async function getMastodonPosts(props: {
         }).then(res => res.data);
         return rawData.map(rawPost => {
             return {
-                domain: domain,
+                endpoint: endpoint,
                 provider: "mastodon",
                 post_id: rawPost.id,
                 account_id: rawPost.account.id,

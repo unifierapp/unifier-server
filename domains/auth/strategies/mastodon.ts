@@ -3,6 +3,7 @@ import axios from "axios";
 import express from "express";
 import Account from "@/models/Account";
 import getOrCreateProviderList from "@/domains/providers/services/getOrCreateProviderList";
+import {z} from "zod";
 
 export interface ProfileField {
     name: string;
@@ -64,7 +65,7 @@ export interface TokenResponse {
 }
 
 type Callback = (req: express.Request,
-                 domain: string,
+                 endpoint: string,
                  accessToken: string,
                  profile: Profile,
                  callback: (err?: Error | null, user?: Express.User, info?: any) => void) => void
@@ -77,58 +78,33 @@ export default class Strategy extends passport.Strategy {
 
     name = "mastodon"
 
-    // Supports http://mastodon.social, https://mastodon.social or mastodon.social
-    static resolveShortDomainName(domain: string) {
-        let result;
-        try {
-            result = new URL(domain).hostname
-        } catch {
-            result = domain
-        }
-        return result;
-    }
-
-    static getUrlFromDomain(url: string) {
-        try {
-            return new URL(url).toString()
-        } catch (e) {
-            return `https://${url}`
-        }
-    }
-
     addClient(props: Client): Client {
-        const domain = Strategy.resolveShortDomainName(props.url);
-        if (this._clients.has(domain)) {
+        const endpoint = props.url
+        if (this._clients.has(endpoint)) {
             throw new Error("This Mastodon server has already been added to this strategy.");
         }
         const newClientConfig = {...props};
-        newClientConfig.url = Strategy.getUrlFromDomain(newClientConfig.url);
         Object.freeze(newClientConfig);
-        this._clients.set(domain, newClientConfig);
+        this._clients.set(endpoint, newClientConfig);
         return newClientConfig;
     }
 
-    getClient(domain: string): Client {
-        const shortDomain = Strategy.resolveShortDomainName(domain);
-        const result = this._clients.get(shortDomain);
+    getClient(endpoint: string): Client {
+        const result = this._clients.get(endpoint);
         if (!result) {
             throw new Error("This Mastodon server has not been configured.");
         }
         return result;
     }
 
-    removeClient(domain: string) {
-        const shortDomain = Strategy.resolveShortDomainName(domain);
-        this._clients.delete(shortDomain)
+    removeClient(endpoint: string) {
+        this._clients.delete(endpoint)
     }
 
     async authenticate(req: express.Request): Promise<void> {
         try {
-            const domain = req.query.domain;
-            if (!domain) {
-                return this.fail(new Error("No domain specified."));
-            }
-            const client = this.getClient(domain as string);
+            const endpoint = z.string().nonempty().parse(req.query.endpoint);
+            const client = this.getClient(endpoint);
 
             // Process without code
             if (!req.query.code) {
@@ -155,7 +131,7 @@ export default class Strategy extends passport.Strategy {
                     },
                     baseURL: client.url
                 })).data;
-                this._callback(req, Strategy.resolveShortDomainName(client.url), tokenInfo.access_token, credentials, (err, user, info) => {
+                this._callback(req, client.url, tokenInfo.access_token, credentials, (err, user, info) => {
                     if (err) {
                         this.fail(err);
                     } else if (!user) {
@@ -188,20 +164,20 @@ export default class Strategy extends passport.Strategy {
 export const mastodonStrategy = new Strategy({
     scope: ["read", "write", "follow", "push"],
     force_login: true
-}, async (req, domain, accessToken, profile, callback) => {
+}, async (req, endpoint, accessToken, profile, callback) => {
     if (!req.isAuthenticated()) {
         return callback(new Error("You must sign in first before you can link your Mastodon account."));
     }
     await Account.findOneAndUpdate({
         provider: "mastodon",
-        domain: domain,
+        endpoint: endpoint,
         user: req.user._id,
     }, {
         $set: {
             user: req.user._id,
             providerAccountId: profile.id,
             provider: "mastodon",
-            domain: domain,
+            endpoint: endpoint,
             accessToken: accessToken,
             displayName: profile.display_name,
             userName: profile.username,
@@ -211,7 +187,7 @@ export const mastodonStrategy = new Strategy({
     });
     await getOrCreateProviderList(req.user, {
         provider: "mastodon",
-        domain: domain,
+        endpoint: endpoint,
     });
     callback(null, req.user);
 });

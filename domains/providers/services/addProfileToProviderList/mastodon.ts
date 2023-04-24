@@ -1,15 +1,10 @@
-import {urlOrDomainToDomain, urlOrDomainToUrl} from "@/utils/urlHelpers";
 import axios from "axios";
 import getAccount from "@/domains/auth/services/getAccount";
-import {NotFoundError} from "@/utils/errors";
+import {z} from "zod";
 
-export default async function addProfileToMastodonList(user: Express.User, params: { domain?: string, accountIds: string[] }) {
-    if (!params.domain) {
-        throw new NotFoundError("You need to specify a domain.");
-    }
-    let domain = urlOrDomainToDomain(params.domain);
-    const account = await getAccount(user, {provider: "mastodon", domain});
-    const endpoint = urlOrDomainToUrl(params.domain);
+export default async function addProfileToMastodonList(user: Express.User, params: { endpoint?: string, accountIds: string[] }) {
+    const endpoint = z.string().nonempty().parse(params.endpoint);
+    const account = await getAccount(user, {provider: "mastodon", endpoint: params.endpoint});
     await axios.post(`/api/v1/lists/${account.internalListId}/accounts`, {
         account_ids: params.accountIds,
     }, {

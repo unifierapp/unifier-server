@@ -1,4 +1,3 @@
-import {urlOrDomainToDomain, urlOrDomainToUrl} from "@/utils/urlHelpers";
 import {z} from "zod";
 import Account, {IAccount} from "@/models/Account";
 import {NotFoundError} from "@/utils/errors";
@@ -8,16 +7,15 @@ import getMastodonClient from "@/domains/auth/services/getMastodonClient";
 import ConnectionAccount from "@/models/ConnectionAccount";
 
 export default async function unlinkMastodon(user: Express.User, options: {
-    domain?: string,
+    endpoint?: string,
 }) {
-    const domain = urlOrDomainToDomain(z.string().nonempty().parse(options.domain));
-    const endpoint = urlOrDomainToUrl(domain);
+    const endpoint = z.string().nonempty().parse(options.endpoint);
     const account: HydratedDocument<IAccount> | null = await Account.findOne({
         user: user._id,
         provider: "mastodon",
-        domain: domain,
+        endpoint: endpoint,
     });
-    const client = await getMastodonClient(domain);
+    const client = await getMastodonClient(endpoint);
     if (!account) {
         throw new NotFoundError("You have not linked this Mastodon account.");
     }
@@ -44,7 +42,7 @@ export default async function unlinkMastodon(user: Express.User, options: {
     await ConnectionAccount.deleteMany({
         user: user._id,
         provider: "mastodon",
-        domain: domain,
+        endpoint: endpoint,
     })
     await account.deleteOne();
 }

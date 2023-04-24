@@ -5,7 +5,7 @@ import z from "zod";
 export default async function resolveProviderAccount(req: express.Request, res: express.Response) {
     res.json(await resolveProviderAccountFunc(req.user!, {
         provider: z.string().nonempty().parse(req.query.provider),
-        domain: z.string().nonempty().optional().parse(req.query.domain),
+        endpoint: z.string().nonempty().optional().parse(req.query.endpoint),
         providerId: z.string().nonempty().parse(req.query.provider_id),
     }));
 }

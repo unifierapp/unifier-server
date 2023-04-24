@@ -1,9 +1,8 @@
 import FederatedClient from "@/models/FederatedClient";
-import {urlOrDomainToDomain} from "@/utils/urlHelpers";
 
-export default function getMastodonClient(urlOrDomain: string) {
+export default function getMastodonClient(endpoint: string) {
     return FederatedClient.findOne({
         provider: "mastodon",
-        domain: urlOrDomainToDomain(urlOrDomain),
+        endpoint: endpoint,
     })
 }
