@@ -16,7 +16,6 @@ export interface IUser extends PassportLocalDocument{
     hash?: string;
     salt?: string;
     attempts?: number;
-    last?: Date;
 }
 
 interface UserModel extends PassportLocalModel<IUser> {}
@@ -46,7 +45,6 @@ const UserSchema = new Schema<IUser, UserModel>({
     hash: String,
     salt: String,
     attempts: Number,
-    last: Date,
 }) as PassportLocalSchema<IUser, UserModel>;
 
 UserSchema.plugin(passportLocalMongoose, {
