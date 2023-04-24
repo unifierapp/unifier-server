@@ -1,5 +1,5 @@
 import express from "express";
-import User from "@/models/User";
+import User, {IUser} from "@/models/User";
 
 export async function signIn(req: express.Request, res: express.Response) {
     const candidateUser = new User({

@@ -1,19 +1,27 @@
-import * as mongoose from "mongoose";
-import passportLocalMongoose from "passport-local-mongoose"
-import {Document, PassportLocalDocument, PassportLocalModel} from "mongoose";
+import mongoose, {
+    Schema,
+    model,
+    PassportLocalSchema,
+    PassportLocalModel, PassportLocalDocument,
+} from 'mongoose';
+import passportLocalMongoose from 'passport-local-mongoose';
 
-export interface IUser extends PassportLocalDocument {
-    email: string,
-    username: string,
-    profilePictureUrl: string,
-    profilePictureCloudId: string,
-    onboarded: boolean,
+export interface IUser extends PassportLocalDocument{
+    _id: mongoose.Types.ObjectId;
+    username: string;
+    email: string;
+    profilePictureUrl: string;
+    profilePictureCloudId?: string;
+    onboarded: boolean;
+    hash?: string;
+    salt?: string;
+    attempts?: number;
+    last?: Date;
 }
 
-interface UserModel<T extends Document> extends PassportLocalModel<T> {
-}
+interface UserModel extends PassportLocalModel<IUser> {}
 
-const UserSchema = new mongoose.Schema<IUser>({
+const UserSchema = new Schema<IUser, UserModel>({
     email: {
         type: String,
         required: true,
@@ -34,15 +42,16 @@ const UserSchema = new mongoose.Schema<IUser>({
         type: Boolean,
         default: false,
         required: true,
-    }
-})
+    },
+    hash: String,
+    salt: String,
+    attempts: Number,
+    last: Date,
+}) as PassportLocalSchema<IUser, UserModel>;
 
 UserSchema.plugin(passportLocalMongoose, {
-    usernameField: 'email',
-    passwordFiled: 'password',
+    usernameField: "email",
 });
 
-const User: UserModel<IUser> = mongoose.model<IUser>("User", UserSchema)
-
-
+let User: UserModel = model<IUser, UserModel>('User', UserSchema);
 export default User;
