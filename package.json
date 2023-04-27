@@ -18,7 +18,7 @@
     "type-is": "^1.6.18",
     "zod": "^3.21.4"
   },
-  "name": "converge-server",
+  "name": "unifier-server",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
