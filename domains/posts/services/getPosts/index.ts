@@ -1,6 +1,7 @@
 import {HydratedDocument} from "mongoose";
 import {IUser} from "@/models/User";
 import getMastodonPosts from "@/domains/posts/services/getPosts/mastodon";
+import getTwitterPosts from "@/domains/posts/services/getPosts/twitter";
 
 export interface PaginationQuery {
     min_id?: string,
@@ -30,11 +31,20 @@ export interface RawPost {
     }
 }
 
+interface AttachmentVariant {
+    bit_rate: number,
+    content_type: string,
+    url: string,
+}
+
+
 interface Attachment {
     type: string,
     url: string,
-    preview_url: string,
+    preview_url?: string,
+    variants?: AttachmentVariant[],
 }
+
 
 export interface ProviderConfig {
     provider: string,
@@ -45,10 +55,14 @@ export default async function getPosts(user: HydratedDocument<IUser>, config: Pr
     const mappings: Record<string, (props: {
         endpoint?: string, user: Express.User,
     }, query: PaginationQuery) => Promise<RawPost[]>> = {
-        mastodon: getMastodonPosts
+        mastodon: getMastodonPosts,
+        twitter: getTwitterPosts,
     }
 
     const func = mappings[config.provider];
+    if (!func) {
+        return [];
+    }
 
     return await func({
         endpoint: config.endpoint, user,

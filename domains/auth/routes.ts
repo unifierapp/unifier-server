@@ -19,15 +19,15 @@ router.get('/twitter', passport.authenticate('twitter', {
     scope: ['profile', 'email']
 }))
 router.get('/twitter/callback', passport.authenticate('twitter', {
-    failureRedirect: getFrontendUrl("/settings"),
-    successRedirect: getFrontendUrl("/settings"),
+    failureRedirect: getFrontendUrl("/settings/connections"),
+    successRedirect: getFrontendUrl("/settings/connections"),
     failureFlash: false
 }))
 router.get('/mastodon', mastodonLogin);
 router.get('/mastodon/callback', mastodonLogin);
 router.get('/twitter/callback', passport.authenticate('mastodon', {
-    failureRedirect: getFrontendUrl("/settings"),
-    successRedirect: getFrontendUrl("/settings"),
+    failureRedirect: getFrontendUrl("/settings/connections"),
+    successRedirect: getFrontendUrl("/settings/connections"),
     failureFlash: false
 }));
 

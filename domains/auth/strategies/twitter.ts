@@ -18,13 +18,15 @@ const callback = async (req: Express.Request,
     }, {
         $set: {
             provider: "twitter",
-            userId: req.user.id,
+            user: req.user.id,
             accessToken: accessToken,
             accessTokenSecret: accessTokenSecret,
             providerAccountId: profile.id,
-            username: profile.username,
+            userName: profile.username,
             displayName: profile.displayName,
-        }
+        },
+    }, {
+        upsert: true
     });
     done(null, req.user);
 }

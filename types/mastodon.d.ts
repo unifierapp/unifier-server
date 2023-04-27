@@ -65,4 +65,5 @@ export interface Post {
     account: Account;
     media_attachments: MediaAttachment[];
     url: string;
+    uri: string;
 }

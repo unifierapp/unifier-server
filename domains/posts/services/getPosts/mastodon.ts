@@ -18,13 +18,12 @@ export default async function getMastodonPosts(props: {
         throw new UnauthorizedError("You haven't signed in to this service yet.");
     }
     try {
-        console.log(account.accessToken);
         const rawData = await axios.get<Post[]>(`/api/v1/timelines/home`, {
             params: {
                 max_id: query.max_id,
                 since_id: query.since_id,
                 min_id: query.min_id,
-                limit: query.limit ?? 10,
+                limit: 20,
             },
             headers: {
                 Authorization: `Bearer ${account.accessToken}`
@@ -50,7 +49,7 @@ export default async function getMastodonPosts(props: {
                 },
                 content: rawPost.content,
                 created_at: rawPost.created_at,
-                url: rawPost.url,
+                url: new URL(`/@${rawPost.account.username}/${rawPost.id}`, endpoint).toString(),
             }
         });
     } catch (e) {

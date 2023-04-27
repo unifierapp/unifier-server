@@ -5,8 +5,8 @@ import passport from "passport";
 import {getFrontendUrl, getUrl} from "@/utils/urlHelpers";
 
 const mastodonMiddleware = passport.authenticate("mastodon", {
-    successRedirect: getFrontendUrl("/settings"),
-    failureRedirect: getFrontendUrl("/settings"),
+    successRedirect: getFrontendUrl("/settings/connections"),
+    failureRedirect: getFrontendUrl("/settings/connections"),
 });
 
 export default async function mastodonLogin(req: express.Request, res: express.Response) {
