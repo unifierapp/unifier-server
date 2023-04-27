@@ -8,7 +8,7 @@ dotenv.config({
     path: "./.env"
 })
 
-export const PORT = process.env.PORT ?? 8000
+export const PORT = process.env.PORT ?? 443
 
 export const DB_NAME = "converge"
 
