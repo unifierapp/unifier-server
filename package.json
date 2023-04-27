@@ -36,6 +36,7 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
+    "start": "nodemon index.ts",
     "dev": "nodemon index.ts",
     "database:linux": "mkdir -p _database && sudo mongod --port 8888 --dbpath ./_database"
   },
