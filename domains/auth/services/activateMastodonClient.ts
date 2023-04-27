@@ -34,8 +34,8 @@ export default async function activateMastodonClient(endpoint: string, redirectU
         return;
     }
     const data = (await axios.post<RawMastodonClient>("/api/v1/apps", {
-        client_name: "Unified",
-        website: "https://unified.feed",
+        client_name: "Unifier",
+        website: "https://unifier.app",
         scopes: ["read", "write", "follow", "push"].join(" "),
         redirect_uris: redirectUrl
     }, {

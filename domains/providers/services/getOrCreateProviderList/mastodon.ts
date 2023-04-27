@@ -15,7 +15,7 @@ export default async function createMastodonList(accessToken: string, endpoint?:
         throw new NotFoundError("You must create a domain - it's somehow missing.");
     }
     const response = await axios.post<ListResponse>("/api/v1/lists", {
-        title: "Converge API Connections"
+        title: "Unifier API Connections"
     }, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
