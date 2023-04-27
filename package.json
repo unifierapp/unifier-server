@@ -16,6 +16,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
     "passport-twitter": "^1.0.4",
+    "ts-node": "^10.9.1",
     "twitter-api-sdk": "^1.2.1",
     "twitter-lite": "^1.1.0",
     "type-is": "^1.6.18",
