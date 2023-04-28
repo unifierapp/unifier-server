@@ -1,7 +1,8 @@
 import passportGoogle, {GoogleCallbackParameters, Profile, VerifyCallback} from "passport-google-oauth20";
 import User, {IUser} from "@/models/User";
-import * as process from "process";
 import {HydratedDocument} from "mongoose";
+import express from "express";
+import {sendConfirmEmail} from "@/domains/auth/services/sendConfirmEmail";
 
 const GoogleStrategy = passportGoogle.Strategy;
 
@@ -9,8 +10,9 @@ const googleStrategy = new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/auth/google/callback",
-    scope: ["profile", "email"]
-}, async (accessToken: string, refreshToken: string, params: GoogleCallbackParameters, profile: Profile, done: VerifyCallback) => {
+    scope: ["profile", "email"],
+    passReqToCallback: true,
+}, async (req: express.Request, accessToken: string, refreshToken: string, params: GoogleCallbackParameters, profile: Profile, done: VerifyCallback) => {
     if (!profile.emails || profile.emails?.length === 0) {
         return done(new Error("Google profile has no emails!"));
     }
@@ -27,6 +29,7 @@ const googleStrategy = new GoogleStrategy({
             username: profile.emails[0].value.split("@")[0],
         })
     }
+    sendConfirmEmail(req, user.newEmail);
     done(null, user);
 });
 

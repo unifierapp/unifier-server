@@ -40,9 +40,11 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
+    "build": "tsc",
     "start": "nodemon index.ts",
     "dev": "nodemon index.ts",
-    "database:linux": "mkdir -p _database && sudo mongod --port 8888 --dbpath ./_database"
+    "database:linux": "mkdir -p _database && sudo mongod --port 8888 --dbpath ./_database",
+    "database": "(if not exist _database mkdir _database) && mongod --port 8888 --dbpath ./_database"
   },
   "author": "",
   "license": "ISC",

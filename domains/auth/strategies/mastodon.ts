@@ -166,8 +166,11 @@ export const mastodonStrategy = new Strategy({
     scope: ["read", "write", "follow", "push"],
     force_login: true
 }, async (req, endpoint, accessToken, profile, callback) => {
-    if (!req.isAuthenticated()) {
+    if (!req.user) {
         return callback(new Error("You must sign in first before you can link your Mastodon account."));
+    }
+    if (!req.user.emailVerified) {
+        return callback(new Error("This user is not verified."));
     }
     await Account.findOneAndUpdate({
         provider: "mastodon",

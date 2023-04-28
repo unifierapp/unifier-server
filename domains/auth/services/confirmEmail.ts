@@ -1,8 +1,8 @@
-import User from "@/models/User";
+import User, {IUser} from "@/models/User";
 import {UnauthorizedError} from "@/utils/errors";
 
 export default async function confirmEmail(token: string) {
-    const user = await User.findOne({
+    const user: IUser|null = await User.findOne({
         emailConfirmationKey: token,
     });
     if (!user) {

@@ -4,7 +4,6 @@ import {Post} from "@/types/mastodon";
 import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
 import {z} from "zod";
-import {raw} from "express";
 
 export default async function getMastodonPosts(props: {
     endpoint?: string, user: Express.User,
@@ -13,7 +12,7 @@ export default async function getMastodonPosts(props: {
     const account = await getAccount(props.user, {
         provider: "mastodon",
         endpoint: endpoint,
-    });
+    }); 
     if (!account) {
         throw new UnauthorizedError("You haven't signed in to this service yet.");
     }

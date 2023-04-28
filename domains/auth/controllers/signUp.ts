@@ -1,6 +1,7 @@
 import express from "express";
 import User from "@/models/User";
 import {HTTPError} from "@/utils/errors";
+import {sendConfirmEmail} from "@/domains/auth/services/sendConfirmEmail";
 
 export async function signUp(req: express.Request, res: express.Response) {
     const newUser = new User({
@@ -17,6 +18,7 @@ export async function signUp(req: express.Request, res: express.Response) {
         if (e instanceof Error) throw new HTTPError(e.message)
         throw e
     }
+    sendConfirmEmail(req, newUser.newEmail);
 
     await new Promise<void>((resolve, reject) => req.login(newUser, function (err) {
         if (err) reject(new HTTPError(err.message))

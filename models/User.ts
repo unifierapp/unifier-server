@@ -12,12 +12,12 @@ export interface IUser extends PassportLocalDocument {
     username: string;
     displayName: string;
     email: string;
-    newEmail: string;
     emailVerified: boolean;
-    emailConfirmationKey?: string;
+    newEmail: string;
     profilePictureUrl: string;
     profilePictureCloudId?: string;
     onboarded: boolean;
+    emailConfirmationKey?: string;
     hash?: string;
     salt?: string;
     attempts?: number;

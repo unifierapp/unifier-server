@@ -9,7 +9,10 @@ const callback = async (req: Express.Request,
                         profile: Profile,
                         done: (error?: Error | null, profile?: HydratedDocument<IUser>) => void) => {
     if (!req.user) {
-        return done(new Error("User has not signed in beforehand!"));
+        return done(new Error("User has not signed in beforehand."));
+    }
+    if (!req.user.emailVerified) {
+        return done(new Error("This user is not verified."));
     }
     // Remove the old Twitter account that belongs to the user.
     await Account.findOneAndUpdate({

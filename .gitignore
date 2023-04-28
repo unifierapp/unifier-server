@@ -16,3 +16,5 @@ _database
 
 # MacOS files
 .DS_Store
+
+# TypeScript production

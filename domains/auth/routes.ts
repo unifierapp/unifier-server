@@ -5,11 +5,14 @@ import mastodonLogin from "@/domains/auth/controllers/mastodon";
 import {getFrontendUrl} from "@/utils/urlHelpers";
 import {signUp} from "@/domains/auth/controllers/signUp";
 import confirmEmail from "@/domains/auth/controllers/confirmEmail";
+import {ensureAuth} from "@/utils/middlewares";
+import resendConfirmEmail from "@/domains/auth/controllers/resendConfirmEmail";
 
 const router = express.Router()
 
 router.post("/signup", signUp);
 router.get("/logout", logout);
+router.post("/resend_confirmation_email", resendConfirmEmail);
 router.get("/confirm_email", confirmEmail)
 router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
