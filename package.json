@@ -42,8 +42,8 @@
     "typescript": "^5.0.4"
   },
   "scripts": {
-
-    "start": "nodemon index.ts",
+    "build": "tsc",
+    "start": "TS_NODE_BASEURL=\"./dist\" node -r tsconfig-paths/register dist/index.js",
     "dev": "nodemon index.ts",
     "database:linux": "mkdir -p _database && sudo mongod --port 8888 --dbpath ./_database",
     "database": "(if not exist _database mkdir _database) && mongod --port 8888 --dbpath ./_database"
