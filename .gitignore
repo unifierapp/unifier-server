@@ -18,3 +18,4 @@ _database
 .DS_Store
 
 # TypeScript production
+dist
