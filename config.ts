@@ -8,9 +8,9 @@ dotenv.config({
     path: "./.env"
 })
 
-export const PORT = process.env.PORT ?? 8000
+export const PORT = process.env.PORT ?? 443
 
-export const DB_NAME = "converge"
+export const DB_NAME = "unifier"
 
 export const MONGODB_URI = process.env.MONGODB_URI
 
