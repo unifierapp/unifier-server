@@ -9,7 +9,7 @@ import providerRouter from "@/domains/providers/routes";
 import connectionRouter from "@/domains/connections/routes";
 import postRouter from "@/domains/posts/routes";
 import userRouter from "@/domains/users/routes";
-
+import morgan from "morgan";
 import {errorHandling} from "@/utils/middlewares";
 
 
@@ -17,6 +17,7 @@ const app = express()
 app.use(cors(config.CORS_CONFIG))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+app.use(morgan("dev"))
 app.enable('trust proxy')
 activatePassport(app)
 

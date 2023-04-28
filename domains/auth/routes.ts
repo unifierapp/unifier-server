@@ -5,7 +5,6 @@ import mastodonLogin from "@/domains/auth/controllers/mastodon";
 import {getFrontendUrl} from "@/utils/urlHelpers";
 import {signUp} from "@/domains/auth/controllers/signUp";
 import confirmEmail from "@/domains/auth/controllers/confirmEmail";
-import {ensureAuth} from "@/utils/middlewares";
 import resendConfirmEmail from "@/domains/auth/controllers/resendConfirmEmail";
 
 const router = express.Router()
