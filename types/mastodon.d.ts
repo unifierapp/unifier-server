@@ -66,4 +66,5 @@ export interface Post {
     media_attachments: MediaAttachment[];
     url: string;
     uri: string;
+    acct: string;
 }

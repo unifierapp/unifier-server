@@ -49,7 +49,7 @@ export default async function getMastodonPosts(props: {
                 },
                 content: rawPost.content,
                 created_at: rawPost.created_at,
-                url: new URL(`/@${rawPost.account.username}/${rawPost.id}`, endpoint).toString(),
+                url: new URL(`/@${rawPost.account.acct}/${rawPost.id}`, endpoint).toString(),
             }
         });
     } catch (e) {

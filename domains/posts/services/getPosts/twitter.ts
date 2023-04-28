@@ -1,6 +1,5 @@
 import {PaginationQuery, RawPost} from "@/domains/posts/services/getPosts/index";
 import axios, {AxiosError} from "axios";
-import {Post} from "@/types/mastodon";
 import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
 import Twitter from "twitter-lite";
@@ -26,7 +25,7 @@ export default async function getTwitterPosts(props: {
             extension: false,
         })
         const apiQuery: Record<string, string | number | boolean | string[]> = {
-            max_results: 1,
+            max_results: 10,
             "tweet.fields": "attachments,created_at,public_metrics,source,entities",
             "media.fields": "preview_image_url,url,type,variants",
             "user.fields": "id,username,name,profile_image_url",
@@ -43,7 +42,7 @@ export default async function getTwitterPosts(props: {
         for (let attachment of twatResponse.includes?.media ?? []) {
             twatterAttachments.set(attachment.media_key, attachment);
         }
-        return twatResponse.data.map(twat => {
+        return twatResponse.data?.map?.(twat => {
             const twatterUser = twatterUsers.get(twat.author_id)!;
             return {
                 post_id: twat.id,
@@ -73,7 +72,7 @@ export default async function getTwitterPosts(props: {
                     profile_image_url: twatterUser.profile_image_url,
                 },
             }
-        });
+        }) ?? [];
     } catch (e) {
         if (e instanceof AxiosError) {
             if (e.status === 401 || e.status === 403) {
