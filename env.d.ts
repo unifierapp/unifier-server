@@ -12,6 +12,10 @@ declare global {
             CLOUDINARY_CLOUD_NAME: string,
             CLOUDINARY_API_KEY: string,
             CLOUDINARY_API_SECRET: string,
+            EMAIL_HOST: string,
+            EMAIL_ACCOUNT: string,
+            EMAIL_PASSWORD: string,
+            EMAIL_NOREPLY_SENDER: string,
         }
     }
 }

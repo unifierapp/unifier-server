@@ -10,6 +10,6 @@ export default async function editEmail(req: express.Request, res: express.Respo
     }
     const newEmail = z.string().email().parse(req.body.email);
     const confirmationToken = await editEmailFunc(req.user, newEmail);
-    await sendConfirmEmail(req, confirmationToken);
+    await sendConfirmEmail(req, newEmail, confirmationToken);
     res.send({});
 }

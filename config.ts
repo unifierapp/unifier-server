@@ -1,8 +1,8 @@
 import dotenv from "dotenv"
 import {SessionOptions} from "express-session"
 import MongoStore from "connect-mongo";
-import process from "process";
 import {CorsOptions} from "cors";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 dotenv.config({
     path: "./.env"
@@ -34,4 +34,17 @@ export const SESSION_CONFIG: SessionOptions = {
 export const CORS_CONFIG: CorsOptions = {
     credentials: true,
     origin: process.env.FRONTEND_URL,
+}
+
+export const MAIL_CONFIG: SMTPTransport.Options = {
+    host: process.env.EMAIL_HOST,
+    auth: {
+        user: process.env.EMAIL_ACCOUNT,
+        pass: process.env.EMAIL_PASSWORD,
+    },
+    port: 587,
+    tls: {
+        rejectUnauthorized: true,
+        minVersion: "TLSv1.3",
+    },
 }

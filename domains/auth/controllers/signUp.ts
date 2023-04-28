@@ -18,8 +18,7 @@ export async function signUp(req: express.Request, res: express.Response) {
         if (e instanceof Error) throw new HTTPError(e.message)
         throw e
     }
-    sendConfirmEmail(req, newUser.newEmail);
-
+    await sendConfirmEmail(req, newUser.newEmail, newUser.emailConfirmationKey!);
     await new Promise<void>((resolve, reject) => req.login(newUser, function (err) {
         if (err) reject(new HTTPError(err.message))
         res.send({

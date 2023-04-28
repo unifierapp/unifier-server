@@ -13,24 +13,31 @@ const googleStrategy = new GoogleStrategy({
     scope: ["profile", "email"],
     passReqToCallback: true,
 }, async (req: express.Request, accessToken: string, refreshToken: string, params: GoogleCallbackParameters, profile: Profile, done: VerifyCallback) => {
-    if (!profile.emails || profile.emails?.length === 0) {
-        return done(new Error("Google profile has no emails!"));
-    }
-    // Sign in flow. We allow users to sign up and link directly via email, but the new account needs to be verified.
-    let user: HydratedDocument<IUser> | null = await User.findOne({
-        email: profile.emails[0].value,
-    });
-    if (!user) {
-        user = await User.create({
+    try {
+        if (!profile.emails || profile.emails?.length === 0) {
+            return done(new Error("Google profile has no emails!"));
+        }
+        // Sign in flow. We allow users to sign up and link directly via email, but the new account needs to be verified.
+        let user: HydratedDocument<IUser> | null = await User.findOne({
             email: profile.emails[0].value,
-            newEmail: profile.emails[0].value,
-            profilePictureUrl: profile.photos?.[0].value,
-            displayName: profile.displayName,
-            username: profile.emails[0].value.split("@")[0],
-        })
+        });
+        if (!user) {
+            user = await User.create({
+                email: profile.emails[0].value,
+                newEmail: profile.emails[0].value,
+                profilePictureUrl: profile.photos?.[0].value,
+                displayName: profile.displayName,
+                username: profile.emails[0].value.split("@")[0],
+            })
+        }
+        await sendConfirmEmail(req, user.newEmail, user.emailConfirmationKey!).then();
+        done(null, user);
+    } catch (e) {
+        if (e instanceof Error) {
+            done(e);
+        }
+        done(new Error());
     }
-    sendConfirmEmail(req, user.newEmail);
-    done(null, user);
 });
 
 export default googleStrategy;
