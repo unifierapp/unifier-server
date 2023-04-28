@@ -5,11 +5,16 @@ import mongoose, {
     PassportLocalModel, PassportLocalDocument,
 } from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
+import * as crypto from "crypto";
 
-export interface IUser extends PassportLocalDocument{
+export interface IUser extends PassportLocalDocument {
     _id: mongoose.Types.ObjectId;
     username: string;
+    displayName: string;
     email: string;
+    newEmail: string;
+    emailVerified: boolean;
+    emailConfirmationKey?: string;
     profilePictureUrl: string;
     profilePictureCloudId?: string;
     onboarded: boolean;
@@ -18,14 +23,33 @@ export interface IUser extends PassportLocalDocument{
     attempts?: number;
 }
 
-interface UserModel extends PassportLocalModel<IUser> {}
+interface UserModel extends PassportLocalModel<IUser> {
+}
 
 const UserSchema = new Schema<IUser, UserModel>({
     email: {
         type: String,
         required: true,
+        unique: true,
+    },
+    newEmail: {
+        type: String,
+    },
+    emailVerified: {
+        type: Boolean,
+        default: false,
+    },
+    emailConfirmationKey: {
+        type: String,
+        unique: true,
+        default: () => crypto.randomBytes(32).toString("hex"),
     },
     username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    displayName: {
         type: String,
         required: true
     },

@@ -21,8 +21,10 @@ const googleStrategy = new GoogleStrategy({
     if (!user) {
         user = await User.create({
             email: profile.emails[0].value,
+            newEmail: profile.emails[0].value,
             profilePictureUrl: profile.photos?.[0].value,
-            username: profile.displayName,
+            displayName: profile.displayName,
+            username: profile.emails[0].value.split("@")[0],
         })
     }
     done(null, user);

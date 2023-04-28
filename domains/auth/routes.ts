@@ -3,10 +3,14 @@ import passport from "passport";
 import logout from "@/domains/auth/controllers/logout";
 import mastodonLogin from "@/domains/auth/controllers/mastodon";
 import {getFrontendUrl} from "@/utils/urlHelpers";
+import {signUp} from "@/domains/auth/controllers/signUp";
+import confirmEmail from "@/domains/auth/controllers/confirmEmail";
 
 const router = express.Router()
 
-router.get("/logout", logout)
+router.post("/signup", signUp);
+router.get("/logout", logout);
+router.get("/confirm_email", confirmEmail)
 router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }))

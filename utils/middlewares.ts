@@ -3,8 +3,13 @@ import {AxiosError} from "axios";
 import express from "express";
 
 export function ensureAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
-    if (!req.isAuthenticated()) {
+    if (!req.user) {
         throw new UnauthorizedError("You must sign in before using the API endpoint.");
+    }
+    if (!req.user.emailVerified) {
+        const e = new UnauthorizedError("You must verify your email before using the service.");
+        e.code = "ERROR_EMAIL_UNVERIFIED";
+        throw e;
     }
     next();
 }

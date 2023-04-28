@@ -10,6 +10,7 @@ export default function getCurrentUser(req: express.Request, res: express.Respon
         delete user.hash;
         delete user.salt;
         delete user.attempts;
+        delete user.emailConfirmationKey;
         res.json({
             ...user.toJSON(),
             withPassword,
