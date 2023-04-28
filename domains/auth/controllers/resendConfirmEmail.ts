@@ -10,9 +10,13 @@ export default async function resendConfirmEmail(req: express.Request, res: expr
     if (!req.user.emailVerified && req.user.newEmail !== req.user.email) {
         throw new UnauthorizedError("You have already been verified.");
     }
+    if (!req.user.newEmail) {
+        req.user.newEmail = req.user.email;
+    }
     if (!req.user.emailConfirmationKey) {
         req.user.emailConfirmationKey = crypto.randomBytes(32).toString("hex");
     }
+    await req.user.save();
     await sendConfirmEmail(req, req.user.newEmail, req.user.emailConfirmationKey);
     res.send({});
 }
