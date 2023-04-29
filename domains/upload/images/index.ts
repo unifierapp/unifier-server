@@ -1,6 +1,6 @@
 import multer from "multer";
 import express from "express";
-import {mimeMatch} from "type-is";
+import {is} from "type-is";
 import {BadArgumentError} from "@/utils/errors";
 
 const imageUploader = multer({
@@ -10,7 +10,7 @@ const imageUploader = multer({
     },
     fileFilter(req: express.Request, file: Express.Multer.File, callback: multer.FileFilterCallback) {
         const mimetype = file.mimetype;
-        if (!mimeMatch("image/*", mimetype)) {
+        if (!is(mimetype, ["image/jpeg", "image/png"])) {
             return callback(new BadArgumentError("This filename does not match."));
         }
         callback(null, true);

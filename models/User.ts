@@ -14,7 +14,7 @@ export interface IUser extends PassportLocalDocument {
     email: string;
     emailVerified: boolean;
     newEmail: string;
-    profilePictureUrl: string;
+    profilePictureUrl?: string;
     profilePictureCloudId?: string;
     onboarded: boolean;
     emailConfirmationKey?: string;
@@ -54,9 +54,7 @@ const UserSchema = new Schema<IUser, UserModel>({
         required: true
     },
     profilePictureUrl: {
-        required: true,
         type: String,
-        default: "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"
     },
     profilePictureCloudId: {
         type: String,
