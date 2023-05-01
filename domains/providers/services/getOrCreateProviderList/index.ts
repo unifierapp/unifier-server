@@ -1,12 +1,15 @@
 import getAccount from "@/domains/auth/services/getAccount";
 import createMastodonList from "@/domains/providers/services/getOrCreateProviderList/mastodon";
-import {NotFoundError} from "@/utils/errors";
+import {NotFoundError, UnauthorizedError} from "@/utils/errors";
 
 export default async function getOrCreateProviderList(user: Express.User, props: {
     provider: string,
     endpoint?: string,
 }): Promise<string> {
     const account = await getAccount(user, props);
+    if (!account) {
+        throw new UnauthorizedError("You have not signed in to this service yet.");
+    }
     if (account.internalListId) {
         return account.internalListId;
     }

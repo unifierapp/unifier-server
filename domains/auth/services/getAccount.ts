@@ -13,8 +13,5 @@ export default async function getAccount(user: Express.User, props: {
         query.endpoint = props.endpoint;
     }
     const result: HydratedDocument<IAccount> | null = await Account.findOne(query);
-    if (!result) {
-        throw new UnauthorizedError("You haven't signed in to this service yet.");
-    }
     return result;
 }

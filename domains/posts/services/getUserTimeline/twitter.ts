@@ -1,20 +1,26 @@
 import {PaginationQuery, RawPost} from "@/domains/posts/types";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
 import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
 import Twitter from "twitter-lite";
 import process from "process";
-import {Attachment, Tweet, TweetResponse, User} from "@/types/twitter";
+import {Attachment, TweetResponse, User} from "@/types/twitter";
 import parseTwitterPost from "@/domains/posts/services/parsePost/twitter";
 
-export default async function getTwitterPosts(props: {
-    endpoint?: string, user: Express.User,
+export default async function getTwitterUserTimeline(props: {
+    endpoint?: string, user: Express.User, profile: Express.User,
 }, query: PaginationQuery): Promise<RawPost[]> {
     const account = await getAccount(props.user, {
         provider: "twitter",
     });
     if (!account) {
         throw new UnauthorizedError("You haven't signed in to this service yet.");
+    }
+    const profile = await getAccount(props.profile, {
+        provider: "twitter",
+    });
+    if (!profile) {
+        throw new NotFoundError("This profile does not have this type of account.");
     }
     try {
         const client = new Twitter({
@@ -35,7 +41,7 @@ export default async function getTwitterPosts(props: {
         };
         if (query.min_id) apiQuery.since_id = query.min_id;
         if (query.max_id) apiQuery.until_id = query.max_id;
-        const twatResponse = (await client.get<TweetResponse>(`users/${account.providerAccountId}/timelines/reverse_chronological`, apiQuery));
+        const twatResponse = (await client.get<TweetResponse>(`users/${account.providerAccountId}/tweets`, apiQuery));
         const twatterUsers: Map<string, User> = new Map();
         for (let user of twatResponse.includes?.users ?? []) {
             twatterUsers.set(user.id, user);

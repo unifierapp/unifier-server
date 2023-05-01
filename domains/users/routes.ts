@@ -13,10 +13,9 @@ const router = express.Router();
 router.get("/current", getCurrentUser);
 router.patch("/email", editEmail);
 router.get("/lookup/:username", userLookup);
-// Private routes start from here.
-router.use(ensureAuth);
-router.patch("/password", editPassword);
-router.post("/profile_picture", changeProfilePicture);
-router.delete("/profile_picture", deleteProfilePicture);
-router.post("/finish_onboarding", finishOnboarding);
+router.patch("/password", ensureAuth, editPassword);
+router.post("/profile_picture", ensureAuth, changeProfilePicture);
+router.delete("/profile_picture", ensureAuth, deleteProfilePicture);
+router.post("/finish_onboarding", ensureAuth, finishOnboarding);
+
 export default router;

@@ -3,6 +3,7 @@ import axios from "axios";
 import getAccount from "@/domains/auth/services/getAccount";
 import {SearchedAccount} from "./index";
 import {z} from "zod";
+import {UnauthorizedError} from "@/utils/errors";
 
 interface MastodonAccount {
     id: string;
@@ -25,17 +26,20 @@ export default async function searchMastodonAccount(user: Express.User, info: {
     endpoint?: string,
 }): Promise<SearchedAccount[]> {
     const endpoint = z.string().nonempty().parse(info.endpoint);
-    const accessToken = await getAccount(user, {
+    const account = await getAccount(user, {
         provider: "mastodon",
         endpoint: endpoint,
     });
+    if (!account) {
+        throw new UnauthorizedError("You haven't signed in to this service yet.");
+    }
     const result = await axios.get<MastodonAccount[]>("/api/v1/accounts/search", {
         params: {
             q: info.username,
             limit: 10,
         },
         headers: {
-            Authorization: `Bearer ${accessToken.accessToken}`
+            Authorization: `Bearer ${account.accessToken}`
         },
         baseURL: endpoint,
     });

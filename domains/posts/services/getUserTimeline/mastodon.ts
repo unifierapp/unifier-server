@@ -6,8 +6,8 @@ import {NotFoundError, UnauthorizedError} from "@/utils/errors";
 import {z} from "zod";
 import parseMastodonPost from "@/domains/posts/services/parsePost/mastodon";
 
-export default async function getMastodonPosts(props: {
-    endpoint?: string, user: Express.User,
+export default async function getMastodonUserTimeline(props: {
+    profile: Express.User, endpoint?: string, user: Express.User,
 }, query: PaginationQuery): Promise<RawPost[]> {
     const endpoint = z.string().nonempty().parse(props.endpoint);
     const account = await getAccount(props.user, {
@@ -17,8 +17,15 @@ export default async function getMastodonPosts(props: {
     if (!account) {
         throw new UnauthorizedError("You haven't signed in to this service yet.");
     }
+    const profile = await getAccount(props.profile, {
+        provider: "mastodon",
+        endpoint: endpoint
+    });
+    if (!profile) {
+        throw new NotFoundError("This profile does not have this type of account.");
+    }
     try {
-        const fetchedData = await axios.get<Post[]>(`/api/v1/timelines/home`, {
+        const fetchedData = await axios.get<Post[]>(`/api/v1/accounts/${profile.providerAccountId}/statuses`, {
             params: {
                 max_id: query.max_id,
                 since_id: query.since_id,
@@ -34,10 +41,10 @@ export default async function getMastodonPosts(props: {
     } catch (e) {
         if (e instanceof AxiosError) {
             if (e.status === 401 || e.status === 403) {
-                throw new UnauthorizedError("This access token is invalid.")
+                throw new UnauthorizedError("This access token is invalid.");
             }
             if (e.status === 404) {
-                throw new NotFoundError("Timeline or endpoint not found.")
+                throw new NotFoundError("This user timeline does not exist.");
             }
         }
         throw e;
