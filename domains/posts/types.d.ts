@@ -38,6 +38,8 @@ interface Attachment {
     url: string,
     preview_url?: string,
     variants?: AttachmentVariant[],
+    width?: number,
+    height?: number,
 }
 
 

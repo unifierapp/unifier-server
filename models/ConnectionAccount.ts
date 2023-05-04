@@ -6,6 +6,7 @@ export interface IConnectionAccount {
     provider: string,
     endpoint?: string,
     providerId: string,
+    __deleted?: boolean,
 }
 
 const ConnectionAccountSchema = new mongoose.Schema<IConnectionAccount>({
@@ -24,7 +25,8 @@ const ConnectionAccountSchema = new mongoose.Schema<IConnectionAccount>({
     provider: {
         type: String,
         required: true,
-    }
+    },
+    __deleted: Boolean,
 });
 
 const ConnectionAccount = mongoose.model<IConnectionAccount>("ConnectionAccount", ConnectionAccountSchema);

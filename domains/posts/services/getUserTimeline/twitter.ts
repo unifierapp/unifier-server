@@ -35,7 +35,7 @@ export default async function getTwitterUserTimeline(props: {
             max_results: query.limit ?? 50,
             exclude: "replies",
             "tweet.fields": "attachments,created_at,public_metrics,source,entities",
-            "media.fields": "preview_image_url,url,type,variants",
+            "media.fields": "preview_image_url,url,type,variants,width,height",
             "user.fields": "id,username,name,profile_image_url",
             expansions: "author_id,attachments.media_keys"
         };

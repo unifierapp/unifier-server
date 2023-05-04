@@ -32,7 +32,9 @@ export interface Attachment {
     type: string,
     url: string,
     media_key: string,
-    variants: AttachmentVariant[]
+    variants: AttachmentVariant[],
+    width?: number,
+    height?: number,
 }
 
 export interface AttachmentVariant {

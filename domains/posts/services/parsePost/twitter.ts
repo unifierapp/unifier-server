@@ -17,6 +17,8 @@ export default function parseTwitterPost(twat: Tweet, meta: {
                 type: attachment.type,
                 preview_url: attachment.preview_image_url,
                 variants: attachment.variants,
+                width: attachment.width,
+                height: attachment.height,
             }
         }) ?? [],
         content: twat.text,
