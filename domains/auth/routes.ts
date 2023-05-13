@@ -6,6 +6,8 @@ import {getFrontendUrl} from "@/utils/urlHelpers";
 import {signUp} from "@/domains/auth/controllers/signUp";
 import confirmEmail from "@/domains/auth/controllers/confirmEmail";
 import resendConfirmEmail from "@/domains/auth/controllers/resendConfirmEmail";
+import linkInstagram from "@/domains/auth/controllers/instagram";
+import {ensureAuth} from "@/utils/middlewares";
 
 const router = express.Router()
 
@@ -21,6 +23,18 @@ router.get('/google/callback', passport.authenticate('google', {
     successRedirect: getFrontendUrl("/dashboard"),
     failureFlash: false
 }))
+
+router.get('/facebook', passport.authenticate('facebook', {
+    scope: ['public_profile', 'user_posts']
+}))
+router.get('/facebook/callback', passport.authenticate('facebook', {
+    failureRedirect: getFrontendUrl("/settings/connections"),
+    successRedirect: getFrontendUrl("/settings/connections"),
+    failureFlash: false
+}))
+
+router.post('/instagram', ensureAuth, linkInstagram);
+
 router.get('/twitter', passport.authenticate('twitter', {
     scope: ['profile', 'email']
 }))

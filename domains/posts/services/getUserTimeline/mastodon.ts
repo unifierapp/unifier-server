@@ -1,4 +1,4 @@
-import {PaginationQuery, RawPost} from "@/domains/posts/types";
+import {PaginationQuery, PostResult, RawPost} from "@/domains/posts/types";
 import axios, {AxiosError} from "axios";
 import {Post} from "@/types/mastodon";
 import getAccount from "@/domains/auth/services/getAccount";
@@ -8,7 +8,7 @@ import parseMastodonPost from "@/domains/posts/services/parsePost/mastodon";
 
 export default async function getMastodonUserTimeline(props: {
     profile: Express.User, endpoint?: string, user: Express.User,
-}, query: PaginationQuery): Promise<RawPost[]> {
+}, query: PaginationQuery): Promise<PostResult> {
     const endpoint = z.string().nonempty().parse(props.endpoint);
     const account = await getAccount(props.user, {
         provider: "mastodon",
@@ -37,7 +37,16 @@ export default async function getMastodonUserTimeline(props: {
             },
             baseURL: endpoint,
         }).then(res => res.data);
-        return fetchedData.map(fetchedPost => parseMastodonPost(endpoint, fetchedPost));
+        const result = fetchedData.map(fetchedPost => parseMastodonPost(endpoint, fetchedPost)).sort((post1, post2) => {
+            return post2.post_id.localeCompare(post1.post_id);
+        });
+        return {
+            data: result,
+            pagination: {
+                max_id: result[0].post_id,
+                min_id: result[result.length - 1].post_id,
+            }
+        };
     } catch (e) {
         if (e instanceof AxiosError) {
             if (e.status === 401 || e.status === 403) {

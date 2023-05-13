@@ -19,6 +19,15 @@ export class IncorrectCredentialsError extends HTTPError {
     }
 }
 
+export class AlreadyLinkedError extends HTTPError {
+    httpCode = 401
+    code = 'ERROR_ALREADY_LINKED'
+
+    constructor(message = 'Account has already been linked.') {
+        super(message)
+    }
+}
+
 export class NotFoundError extends HTTPError {
     httpCode = 404
     code = 'ERROR_NOT_FOUND'

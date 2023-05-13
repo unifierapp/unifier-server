@@ -1,16 +1,18 @@
 import {HydratedDocument} from "mongoose";
 import User, {IUser} from "@/models/User";
-import {ProviderConfig, PaginationQuery, RawPost} from "@/domains/posts/types";
+import {ProviderConfig, PaginationQuery, RawPost, PostResult} from "@/domains/posts/types";
 import {NotFoundError} from "@/utils/errors";
 import getMastodonUserTimeline from "@/domains/posts/services/getUserTimeline/mastodon";
 import getTwitterUserTimeline from "@/domains/posts/services/getUserTimeline/twitter";
+import getInstagramUserTimeline from "@/domains/posts/services/getUserTimeline/instagram";
 
-export default async function getUserTimeline(user: HydratedDocument<IUser>, profileId: string, config: ProviderConfig, query: PaginationQuery): Promise<RawPost[]> {
+export default async function getUserTimeline(user: HydratedDocument<IUser>, profileId: string, config: ProviderConfig, query: PaginationQuery): Promise<PostResult> {
     const mappings: Record<string, (props: {
         endpoint?: string, user: Express.User, profile: Express.User,
-    }, query: PaginationQuery) => Promise<RawPost[]>> = {
+    }, query: PaginationQuery) => Promise<PostResult>> = {
         mastodon: getMastodonUserTimeline,
-        twitter: getTwitterUserTimeline
+        twitter: getTwitterUserTimeline,
+        instagram: getInstagramUserTimeline,
     }
 
     const func = mappings[config.provider];

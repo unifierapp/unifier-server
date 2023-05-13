@@ -15,20 +15,20 @@ export function ensureAuth(req: express.Request, res: express.Response, next: ex
 }
 
 export async function errorHandling(e: unknown, request: express.Request, response: express.Response, next: express.NextFunction) {
-    console.error(e);
     if (e instanceof HTTPError) {
-        // console.log(e.message);
+        console.error(e);
         return response.status(e.httpCode).json({
             message: e.message,
             code: e.code,
         });
     } else if (e instanceof AxiosError) {
+        console.error(e.response?.data);
         return response.status(500).json({
             message: e.cause,
             code: 'ERROR_INTERNAL_AXIOS_ERROR',
         });
     } else if (e instanceof Error) {
-        // console.log(e.message);
+        console.error(e);
         return response.status(500).json({
             message: e.message,
             code: 'ERROR_INTERNAL_SERVER_ERROR',

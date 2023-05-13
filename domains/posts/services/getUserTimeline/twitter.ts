@@ -1,4 +1,4 @@
-import {PaginationQuery, RawPost} from "@/domains/posts/types";
+import {PaginationQuery, PostResult, RawPost} from "@/domains/posts/types";
 import {AxiosError} from "axios";
 import getAccount from "@/domains/auth/services/getAccount";
 import {NotFoundError, UnauthorizedError} from "@/utils/errors";
@@ -9,7 +9,7 @@ import parseTwitterPost from "@/domains/posts/services/parsePost/twitter";
 
 export default async function getTwitterUserTimeline(props: {
     endpoint?: string, user: Express.User, profile: Express.User,
-}, query: PaginationQuery): Promise<RawPost[]> {
+}, query: PaginationQuery): Promise<PostResult> {
     const account = await getAccount(props.user, {
         provider: "twitter",
     });
@@ -50,10 +50,16 @@ export default async function getTwitterUserTimeline(props: {
         for (let attachment of twatResponse.includes?.media ?? []) {
             twatterAttachments.set(attachment.media_key, attachment);
         }
-        return twatResponse.data?.map?.(twat => parseTwitterPost(twat, {
-            users: twatterUsers,
-            attachments: twatterAttachments,
-        })) ?? [];
+        return {
+            data: twatResponse.data?.map?.(twat => parseTwitterPost(twat, {
+                users: twatterUsers,
+                attachments: twatterAttachments,
+            })) ?? [],
+            pagination: {
+                max_id: twatResponse.meta.oldest_id,
+                min_id: twatResponse.meta.newest_id,
+            }
+        }
     } catch (e) {
         if (e instanceof AxiosError) {
             if (e.status === 401 || e.status === 403) {

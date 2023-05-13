@@ -18,6 +18,12 @@ export interface TweetResponse {
         users?: User[],
         media?: Attachment[],
     },
+    meta: {
+        result_count: number,
+        newest_id: string,
+        oldest_id: string,
+        next_token: string,
+    },
 }
 
 export interface User {

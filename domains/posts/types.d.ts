@@ -22,12 +22,20 @@ export interface RawPost {
     engagement_stats: {
         likes: number,
         comments: number,
-        reposts: number,
+        reposts?: number,
+    }
+}
+
+export interface PostResult {
+    data: RawPost[],
+    pagination: {
+        max_id?: string,
+        min_id?: string,
     }
 }
 
 interface AttachmentVariant {
-    bit_rate: number,
+    bit_rate?: number,
     content_type: string,
     url: string,
 }
