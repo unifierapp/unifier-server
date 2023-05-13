@@ -17,6 +17,7 @@ export default async function linkInstagram(user: Express.User, config: {
     ig.state.generateDevice(config.username);
     const loggedInUser = await ig.account.login(config.username, config.password);
     const serializedState = await ig.state.serialize();
+    delete serializedState.constants;
     account = new Account({
         user: user._id,
         provider: "instagram",

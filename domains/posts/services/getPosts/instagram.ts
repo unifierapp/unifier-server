@@ -2,7 +2,7 @@ import {PaginationQuery, PostResult} from "@/domains/posts/types";
 import getAccount from "@/domains/auth/services/getAccount";
 import {UnauthorizedError} from "@/utils/errors";
 import {IgApiClient} from "instagram-private-api";
-import {parseInstagramTimelinePost} from "@/domains/posts/services/parsePost/instagram";
+import {parseInstagramPost} from "@/domains/posts/services/parsePost/instagram";
 
 export default async function getInstagramPosts(props: {
     endpoint?: string, user: Express.User,
@@ -24,7 +24,7 @@ export default async function getInstagramPosts(props: {
     const response = await timeline.request();
     return {
         data: response.feed_items.filter(item => item.media_or_ad).map(item => {
-            return parseInstagramTimelinePost(item.media_or_ad);
+            return parseInstagramPost(item.media_or_ad);
         }),
         pagination: {
             max_id: response.next_max_id,
