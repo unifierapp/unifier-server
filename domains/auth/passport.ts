@@ -16,7 +16,7 @@ function activatePassport(app: express.Express) {
     passport.use(googleStrategy);
     passport.use(twitterStrategy);
     passport.use(mastodonStrategy);
-    passport.use(facebookStrategy);
+    // passport.use(facebookStrategy);
     passport.use(new LocalStrategy(User.authenticate()));
     passport.serializeUser((user, done) => {
         done(null, user.id);

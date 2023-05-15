@@ -2,7 +2,6 @@ import {Strategy} from "passport-facebook"
 import {UnauthorizedError} from "@/utils/errors";
 import Account from "@/models/Account";
 
-console.log(process.env.FACEBOOK_CLIENT_ID)
 const facebookStrategy = new Strategy({
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
