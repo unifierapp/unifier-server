@@ -7,6 +7,7 @@ import {signUp} from "@/domains/auth/controllers/signUp";
 import confirmEmail from "@/domains/auth/controllers/confirmEmail";
 import resendConfirmEmail from "@/domains/auth/controllers/resendConfirmEmail";
 import linkInstagram from "@/domains/auth/controllers/instagram";
+import linkLinkedIn from "@/domains/auth/controllers/linkedin";
 import {ensureAuth} from "@/utils/middlewares";
 
 const router = express.Router()
@@ -34,6 +35,7 @@ router.get('/facebook/callback', passport.authenticate('facebook', {
 }))
 
 router.post('/instagram', ensureAuth, linkInstagram);
+router.post('/linkedin', ensureAuth, linkLinkedIn);
 
 router.get('/twitter', passport.authenticate('twitter', {
     scope: ['profile', 'email']
