@@ -1,5 +1,5 @@
-import app from "@/server";
 import * as config from "@/config";
+import app from "@/server";
 import "@/utils/axiosDev";
 
 (async () => {
