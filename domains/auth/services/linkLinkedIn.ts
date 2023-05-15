@@ -1,4 +1,4 @@
-import {Client as LinkedinClient} from "linkedin-private-api-extended";
+import {Client as LinkedinClient} from "linkedin-private-api-expanded";
 import Account from "@/models/Account";
 import {AlreadyLinkedError, UnauthorizedError} from "@/utils/errors";
 
@@ -18,7 +18,6 @@ export default async function linkInstagram(user: Express.User, config: {
         username: config.username, password: config.password, useCache: false,
     });
 
-    await linkedinClient.login.userPass({username: config.username, password: config.password, useCache: false});
     const profile = await linkedinClient.profile.getOwnProfile();
 
     if (!profile) {
