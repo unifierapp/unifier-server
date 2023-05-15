@@ -14,7 +14,10 @@ export default async function linkLinkedIn(user: Express.User, config: {
         throw new AlreadyLinkedError();
     }
     const linkedinClient = new LinkedinClient();
-
+    await linkedinClient.login.userPass({
+        username: config.username,
+        password: config.password,
+    });
     const profile = await linkedinClient.profile.getOwnProfile();
 
     if (!profile) {

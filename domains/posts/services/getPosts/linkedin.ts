@@ -22,12 +22,12 @@ export default async function getLinkedinPosts(props: {
             if (item.videoAttachment) {
                 attachments.push({
                     type: "video",
-                    url: item.videoAttachment.progressiveStreams[0].streamingLocation[0].url,
+                    url: item.videoAttachment.progressiveStreams[0].streamingLocations[0].url,
                     width: item.videoAttachment.progressiveStreams[0].width,
                     height: item.videoAttachment.progressiveStreams[0].height,
                     variants: item.videoAttachment.progressiveStreams.map(variant => {
                         return {
-                            url: variant.streamingLocation[0].url,
+                            url: variant.streamingLocations[0].url,
                             content_type: variant.mediaType,
                             bit_rate: variant.bitRate,
                         }
@@ -36,8 +36,9 @@ export default async function getLinkedinPosts(props: {
             }
             if (item.imageAttachments) {
                 item.imageAttachments.forEach(attachment => {
+                    const url = `${attachment.rootUrl}${attachment.artifacts[0].fileIdentifyingUrlPathSegment}`;
                     attachments.push({
-                        url: `${attachment.rootUrl}${attachment.artifacts[0].fileIdentifyingUrlPathSegment}`,
+                        url: url,
                         width: attachment.artifacts[0].width,
                         height: attachment.artifacts[0].height,
                         type: "image",
@@ -56,7 +57,7 @@ export default async function getLinkedinPosts(props: {
                 provider_account: {
                     username: item.profile.publicIdentifier ?? "",
                     id: item.profile.entityUrn ?? "",
-                    profile_image_url: `${item.profile.picture?.rootUrl}${item.profile.picture?.artifacts[0].fileIdentifyingUrlPathSegment}` ?? "",
+                    profile_image_url: item.profile.picture ? `${item.profile.picture?.rootUrl}${item.profile.picture?.artifacts[0].fileIdentifyingUrlPathSegment}` : "",
                     display_name: `${item.profile.firstName} ${item.profile.lastName}`
                 },
                 content: item.commentary?.text.text ?? "",
