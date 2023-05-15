@@ -20,7 +20,6 @@ export function parseInstagramPost(post: TimelineFeedResponseMedia_or_ad | UserF
         }];
         url = `https://instagram.com/reel/${post.code}`;
     } else if (post.media_type === 1) {
-        console.log(post);
         attachments = [{
             width: post.original_width,
             height: post.original_height,
