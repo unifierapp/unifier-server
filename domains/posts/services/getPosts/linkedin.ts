@@ -47,7 +47,7 @@ export default async function getLinkedinPosts(props: {
             }
             return {
                 post_id: item.entityUrn,
-                url: "",
+                url: `https://linkedin.com/feed/update/${item.updateMetadata.urn}`,
                 provider: "linkedin",
                 engagement_stats: {
                     likes: item.socialActivityCount.numLikes,
