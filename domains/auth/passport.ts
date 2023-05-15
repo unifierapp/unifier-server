@@ -7,7 +7,7 @@ import {Strategy as LocalStrategy} from "passport-local";
 import passport from "passport";
 import express from "express";
 import twitterStrategy from "./strategies/twitter";
-import facebookStrategy from "@/domains/auth/strategies/facebook";
+import facebookStrategy from "./strategies/facebook";
 
 function activatePassport(app: express.Express) {
     app.use(session(config.SESSION_CONFIG));
@@ -16,7 +16,7 @@ function activatePassport(app: express.Express) {
     passport.use(googleStrategy);
     passport.use(twitterStrategy);
     passport.use(mastodonStrategy);
-    // passport.use(facebookStrategy);
+    passport.use(facebookStrategy);
     passport.use(new LocalStrategy(User.authenticate()));
     passport.serializeUser((user, done) => {
         done(null, user.id);

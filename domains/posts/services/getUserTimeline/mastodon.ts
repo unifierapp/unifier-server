@@ -43,8 +43,8 @@ export default async function getMastodonUserTimeline(props: {
         return {
             data: result,
             pagination: {
-                max_id: result[0].post_id,
-                min_id: result[result.length - 1].post_id,
+                max_id: result[0]?.post_id,
+                min_id: result[result.length - 1]?.post_id,
             }
         };
     } catch (e) {
