@@ -1,9 +1,7 @@
-import {PaginationQuery, PostResult} from "@/domains/posts/types";
+import {Attachment, PaginationQuery, PostResult} from "@/domains/posts/types";
 import getAccount from "@/domains/auth/services/getAccount";
 import {UnauthorizedError} from "@/utils/errors";
-import {parseInstagramPost} from "@/domains/posts/services/parsePost/instagram";
 import {Client as LinkedinClient} from "linkedin-private-api-extended";
-import {response} from "express";
 
 export default async function getLinkedinPosts(props: {
     endpoint?: string, user: Express.User,
@@ -20,6 +18,32 @@ export default async function getLinkedinPosts(props: {
     const posts = await timeline.scrollNext();
     return {
         data: posts.map(item => {
+            const attachments: Attachment[] = [];
+            if (item.videoAttachment) {
+                attachments.push({
+                    type: "video",
+                    url: item.videoAttachment.progressiveStreams[0].streamingLocation[0].url,
+                    width: item.videoAttachment.progressiveStreams[0].width,
+                    height: item.videoAttachment.progressiveStreams[0].height,
+                    variants: item.videoAttachment.progressiveStreams.map(variant => {
+                        return {
+                            url: variant.streamingLocation[0].url,
+                            content_type: variant.mediaType,
+                            bit_rate: variant.bitRate,
+                        }
+                    })
+                });
+            }
+            if (item.imageAttachments) {
+                item.imageAttachments.forEach(attachment => {
+                    attachments.push({
+                        url: `${attachment.rootUrl}${attachment.artifacts[0].fileIdentifyingUrlPathSegment}`,
+                        width: attachment.artifacts[0].width,
+                        height: attachment.artifacts[0].height,
+                        type: "image",
+                    });
+                })
+            }
             return {
                 post_id: item.entityUrn,
                 url: "",
@@ -37,7 +61,7 @@ export default async function getLinkedinPosts(props: {
                 },
                 content: item.commentary?.text.text ?? "",
                 endpoint: "https://linkedin.com",
-                attachments: [],
+                attachments: attachments,
                 created_at: new Date(),
             }
         }),

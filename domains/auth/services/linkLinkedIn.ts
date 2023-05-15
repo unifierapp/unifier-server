@@ -2,7 +2,7 @@ import {Client as LinkedinClient} from "linkedin-private-api-extended";
 import Account from "@/models/Account";
 import {AlreadyLinkedError, UnauthorizedError} from "@/utils/errors";
 
-export default async function linkInstagram(user: Express.User, config: {
+export default async function linkLinkedIn(user: Express.User, config: {
     password: string,
     username: string,
 }) {
@@ -14,9 +14,6 @@ export default async function linkInstagram(user: Express.User, config: {
         throw new AlreadyLinkedError();
     }
     const linkedinClient = new LinkedinClient();
-    await linkedinClient.login.userPass({
-        username: config.username, password: config.password, useCache: false,
-    });
 
     await linkedinClient.login.userPass({username: config.username, password: config.password, useCache: false});
     const profile = await linkedinClient.profile.getOwnProfile();

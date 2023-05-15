@@ -6,6 +6,7 @@ import {ProviderConfig, PaginationQuery, PostResult} from "@/domains/posts/types
 import {NotFoundError} from "@/utils/errors";
 import getFacebookPosts from "@/domains/posts/services/getPosts/facebook";
 import getInstagramPosts from "@/domains/posts/services/getPosts/instagram";
+import getLinkedinPosts from "@/domains/posts/services/getPosts/linkedin";
 
 export default async function getPosts(user: HydratedDocument<IUser>, config: ProviderConfig, query: PaginationQuery): Promise<PostResult> {
     const mappings: Record<string, (props: {
@@ -14,6 +15,7 @@ export default async function getPosts(user: HydratedDocument<IUser>, config: Pr
         mastodon: getMastodonPosts,
         twitter: getTwitterPosts,
         instagram: getInstagramPosts,
+        linkedin: getLinkedinPosts
     }
 
     const func = mappings[config.provider];
